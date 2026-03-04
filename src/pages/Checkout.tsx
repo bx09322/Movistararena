@@ -107,8 +107,10 @@ export default function Checkout() {
     </div>
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const safeShow = show!;
   const section = SECTIONS.find(s => s.name === form.section) ?? SECTIONS[0];
-  const basePrice = show.price + section.extra;
+  const basePrice = safeShow.price + section.extra;
   const serviceFee = Math.round(basePrice * 0.12);
   const subtotal = (basePrice + serviceFee) * form.quantity;
   const cardBrand = detectCardType(form.cardNumber);
@@ -153,10 +155,11 @@ export default function Checkout() {
     if (!validatePago()) return;
     setLoading(true);
     await new Promise(r => setTimeout(r, 2200));
+    if (!show) { setLoading(false); return; }
     const pid = generateId();
     const purchase: PurchaseData = {
       id: pid,
-      showId: show.id, showTitle: show.title, showDate: show.dateLabel,
+      showId: safeShow.id, showTitle: safeShow.title, showDate: safeShow.dateLabel,
       quantity: form.quantity, section: form.section,
       totalAmount: subtotal,
       cardNumber: form.cardNumber, cardHolder: form.cardHolder,
@@ -184,7 +187,7 @@ export default function Checkout() {
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <div className={styles.topBar}>
         <div className={styles.topInner}>
-          <button className={styles.backBtn} onClick={() => step === 'tickets' ? navigate(`/show/${show.id}`) : setStep(step === 'datos' ? 'tickets' : step === 'pago' ? 'datos' : 'tickets')}>
+          <button className={styles.backBtn} onClick={() => step === 'tickets' ? navigate(`/show/${safeShow.id}`) : setStep(step === 'datos' ? 'tickets' : step === 'pago' ? 'datos' : 'tickets')}>
             <ArrowLeft size={15} />
             {step === 'tickets' ? 'Volver al show' : 'Atras'}
           </button>
@@ -230,7 +233,7 @@ export default function Checkout() {
               {/* Section picker */}
               <div className={styles.sectionGrid}>
                 {SECTIONS.map(sec => {
-                  const secPrice = show.price + sec.extra;
+                  const secPrice = safeShow.price + sec.extra;
                   return (
                     <button
                       key={sec.name}
@@ -553,9 +556,9 @@ export default function Checkout() {
                     <strong className={styles.ticketId}>{purchaseId}</strong>
                   </div>
                   <div className={styles.ticketDivider} />
-                  <div className={styles.ticketRow}><span>Show</span><strong>{show.title}</strong></div>
-                  <div className={styles.ticketRow}><span>Fecha</span><strong>{show.dateLabel}</strong></div>
-                  <div className={styles.ticketRow}><span>Horario</span><strong>Puertas {show.puertas} | Show {show.showTime}</strong></div>
+                  <div className={styles.ticketRow}><span>Show</span><strong>{safeShow.title}</strong></div>
+                  <div className={styles.ticketRow}><span>Fecha</span><strong>{safeShow.dateLabel}</strong></div>
+                  <div className={styles.ticketRow}><span>Horario</span><strong>Puertas {safeShow.puertas} | Show {safeShow.showTime}</strong></div>
                   <div className={styles.ticketRow}><span>Lugar</span><strong>Pacify Arena — Buenos Aires</strong></div>
                   <div className={styles.ticketDivider} />
                   <div className={styles.ticketRow}><span>Sector</span><strong>{form.section}</strong></div>
@@ -624,28 +627,28 @@ export default function Checkout() {
               {/* Show image */}
               <div className={styles.summaryImg}>
                 <img
-                  src={`/images/${show.image}`}
-                  alt={show.title}
+                  src={`/images/${safeShow.image}`}
+                  alt={safeShow.title}
                   onError={(e) => {
                     const t = e.target as HTMLImageElement;
                     t.style.display = 'none';
                     (t.nextElementSibling as HTMLElement).style.display = 'flex';
                   }}
                 />
-                <div className={styles.summaryImgFallback} style={{ background: show.bgGradient }}>
-                  {show.title.toUpperCase()}
+                <div className={styles.summaryImgFallback} style={{ background: safeShow.bgGradient }}>
+                  {safeShow.title.toUpperCase()}
                 </div>
               </div>
 
               <div className={styles.summaryInfo}>
-                <div className={styles.summaryShow}>{show.title}</div>
+                <div className={styles.summaryShow}>{safeShow.title}</div>
                 <div className={styles.summaryDetail}>
                   <MapPin size={13} />
                   Pacify Arena — Buenos Aires
                 </div>
                 <div className={styles.summaryDetail}>
                   <Clock size={13} />
-                  {show.dateLabel} | Show {show.showTime}
+                  {safeShow.dateLabel} | Show {safeShow.showTime}
                 </div>
               </div>
 
