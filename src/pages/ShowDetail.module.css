@@ -1,7 +1,4 @@
-.page {
-  padding-top: 64px;
-  min-height: 100vh;
-}
+.page { padding-top: 64px; min-height: 100vh; }
 
 .notFound {
   padding-top: 120px;
@@ -24,17 +21,15 @@
   gap: 6px;
   background: none;
   border: none;
-  color: white;
+  color: rgba(255,255,255,0.7);
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   transition: color 0.2s;
   padding: 0;
+  font-family: 'Nunito', sans-serif;
 }
-
-.backBtn:hover {
-  color: #a78bfa;
-}
+.backBtn:hover { color: #a78bfa; }
 
 .content {
   max-width: 1280px;
@@ -42,11 +37,7 @@
   padding: 24px 40px 80px;
 }
 
-.title {
-  font-size: 42px;
-  font-weight: 900;
-  margin-bottom: 28px;
-}
+.title { font-size: 42px; font-weight: 900; margin-bottom: 28px; }
 
 .grid {
   display: grid;
@@ -55,7 +46,6 @@
   align-items: start;
 }
 
-/* Image */
 .imageWrapper {
   width: 100%;
   border-radius: 16px;
@@ -65,12 +55,7 @@
   aspect-ratio: 16/9;
 }
 
-.image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
+.image { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 .imagePlaceholder {
   width: 100%;
@@ -85,14 +70,9 @@
   padding: 24px;
 }
 
-.placeholderText {
-  font-family: 'Bebas Neue', cursive;
-}
+.placeholderText { font-family: 'Bebas Neue', cursive; }
 
-/* About */
-.about {
-  margin-top: 32px;
-}
+.about { margin-top: 32px; }
 
 .aboutTitle {
   font-size: 24px;
@@ -102,11 +82,7 @@
   margin-bottom: 14px;
 }
 
-.aboutText {
-  font-size: 14px;
-  color: #8ba0b8;
-  line-height: 1.85;
-}
+.aboutText { font-size: 14px; color: #9d8fc0; line-height: 1.85; }
 
 /* Ticket box */
 .ticketBox {
@@ -119,37 +95,25 @@
 }
 
 .ticketHeader {
-  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
   padding: 20px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.ticketFromLabel {
-  font-size: 14px;
-  font-weight: 800;
-  color: white;
-}
+.ticketFromLabel { font-size: 14px; font-weight: 800; color: rgba(255,255,255,0.8); }
+.ticketPrice { font-family: 'Bebas Neue', cursive; font-size: 38px; color: white; letter-spacing: 1px; }
 
-.ticketPrice {
-  font-family: 'Bebas Neue', cursive;
-  font-size: 38px;
-  color: white;
-  letter-spacing: 1px;
-}
-
-.ticketBody {
-  padding: 20px 24px;
-}
+.ticketBody { padding: 20px 24px; }
 
 .dateRow {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
   padding-bottom: 16px;
   border-bottom: 1px solid #2a1d5e;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   flex-wrap: wrap;
 }
 
@@ -161,111 +125,35 @@
   flex-shrink: 0;
 }
 
-.dateBadgeDay {
-  display: block;
-  font-family: 'Bebas Neue', cursive;
-  font-size: 30px;
-  color: #a78bfa;
-  line-height: 1;
-}
+.dateBadgeDay { display: block; font-family: 'Bebas Neue', cursive; font-size: 30px; color: #a78bfa; line-height: 1; }
+.dateBadgeMonth { display: block; font-size: 11px; font-weight: 700; color: #9d8fc0; text-transform: uppercase; letter-spacing: 0.5px; }
 
-.dateBadgeMonth {
-  display: block;
-  font-size: 11px;
-  font-weight: 700;
-  color: #8ba0b8;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
+.times { display: flex; gap: 22px; flex: 1; }
 
-.times {
-  display: flex;
-  gap: 20px;
-  flex: 1;
-}
-
-.timeItem {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.timeLabel {
-  font-size: 11px;
-  color: #a78bfa;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-
-.timeVal {
-  font-size: 16px;
-  font-weight: 800;
-}
-
-.timeSubLabel {
-  font-size: 11px;
-  color: #8ba0b8;
-  font-weight: 600;
-}
-
-.btnSold {
-  padding: 9px 16px;
-  border: 1.5px solid rgba(255,255,255,0.15);
-  border-radius: 25px;
-  background: transparent;
-  color: rgba(255,255,255,0.35);
-  font-size: 13px;
-  font-weight: 700;
-  cursor: not-allowed;
-  white-space: nowrap;
-}
-
-.btnBuySmall {
-  padding: 9px 16px;
-  border: 1.5px solid rgba(255,255,255,0.25);
-  border-radius: 25px;
-  background: transparent;
-  color: white;
-  font-size: 13px;
-  font-weight: 800;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
-}
-
-.btnBuySmall:hover {
-  background: linear-gradient(135deg, #7c3aed, #a78bfa);
-  border-color: #a78bfa;
-  color: white;
-}
+.timeItem { display: flex; flex-direction: column; gap: 2px; }
+.timeLabel { font-size: 11px; color: #a78bfa; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+.timeVal { font-size: 16px; font-weight: 800; }
 
 .btnBuyBig {
   width: 100%;
-  padding: 14px;
+  padding: 15px;
   border-radius: 25px;
   border: none;
-  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
   color: white;
-  font-size: 15px;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 900;
   cursor: pointer;
   letter-spacing: 0.3px;
   margin-bottom: 4px;
   transition: opacity 0.2s, transform 0.15s;
+  font-family: 'Nunito', sans-serif;
 }
 
-.btnBuyBig:hover {
-  opacity: 0.88;
-  transform: translateY(-1px);
-}
+.btnBuyBig:hover { opacity: 0.88; transform: translateY(-1px); }
 
 /* Accordion */
-.accordion {
-  border-top: 1px solid #2a1d5e;
-  padding: 14px 0 0;
-  margin-top: 12px;
-}
+.accordion { border-top: 1px solid #2a1d5e; padding: 14px 0 0; margin-top: 12px; }
 
 .accordionHeader {
   display: flex;
@@ -280,26 +168,19 @@
   cursor: pointer;
   padding-bottom: 14px;
   transition: color 0.2s;
+  font-family: 'Nunito', sans-serif;
 }
 
-.accordionHeader:hover {
-  color: #a78bfa;
-}
+.accordionHeader:hover { color: #a78bfa; }
 
-.accordionTitle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+.accordionTitle { display: flex; align-items: center; gap: 8px; }
 
-.rotated {
-  transform: rotate(180deg);
-}
+.rotated { transform: rotate(180deg); }
 
 .accordionBody {
   padding: 0 0 14px 24px;
   font-size: 13px;
-  color: #8ba0b8;
+  color: #9d8fc0;
   line-height: 1.7;
   animation: fadeIn 0.2s ease;
 }
@@ -310,13 +191,8 @@
 }
 
 @media (max-width: 1024px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .ticketBox {
-    position: static;
-  }
+  .grid { grid-template-columns: 1fr; }
+  .ticketBox { position: static; }
 }
 
 @media (max-width: 640px) {

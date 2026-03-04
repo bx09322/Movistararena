@@ -254,7 +254,7 @@ export const shows: Show[] = [
     priceLabel: '$ 50.000',
     puertas: '13:00 hs',
     showTime: '15:00 hs',
-    sold: true,
+    sold: false,
     targetDate: '2026-04-03T15:00:00',
     bgGradient: 'linear-gradient(135deg, #1a6ef5 0%, #0a40b0 50%, #051a55 100%)',
     textColor: '#ffffff',

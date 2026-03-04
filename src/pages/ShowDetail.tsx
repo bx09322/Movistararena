@@ -45,8 +45,9 @@ export default function ShowDetail() {
                 alt={show.title}
                 className={styles.image}
                 onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                  const sib = (e.target as HTMLImageElement).nextElementSibling as HTMLElement;
+                  const img = e.target as HTMLImageElement;
+                  img.style.display = 'none';
+                  const sib = img.nextElementSibling as HTMLElement;
                   if (sib) sib.style.display = 'flex';
                 }}
               />
@@ -82,33 +83,22 @@ export default function ShowDetail() {
                   </div>
                   <div className={styles.times}>
                     <div className={styles.timeItem}>
-                      <span className={styles.timeLabel}>Horarios</span>
+                      <span className={styles.timeLabel}>Puertas</span>
                       <span className={styles.timeVal}>{show.puertas}</span>
-                      <span className={styles.timeSubLabel}>Puertas</span>
                     </div>
                     <div className={styles.timeItem}>
-                      <span className={styles.timeLabel}>&nbsp;</span>
+                      <span className={styles.timeLabel}>Show</span>
                       <span className={styles.timeVal}>{show.showTime}</span>
-                      <span className={styles.timeSubLabel}>Show</span>
                     </div>
                   </div>
-                  {show.sold ? (
-                    <button className={styles.btnSold} disabled>Agotado</button>
-                  ) : (
-                    <button className={styles.btnBuySmall} onClick={() => navigate(`/checkout/${show.id}`)}>
-                      Comprar
-                    </button>
-                  )}
                 </div>
 
-                {!show.sold && (
-                  <button
-                    className={styles.btnBuyBig}
-                    onClick={() => navigate(`/checkout/${show.id}`)}
-                  >
-                    Comprar entradas
-                  </button>
-                )}
+                <button
+                  className={styles.btnBuyBig}
+                  onClick={() => navigate(`/checkout/${show.id}`)}
+                >
+                  Comprar entradas
+                </button>
 
                 {/* Accordion - Medios de pago */}
                 <div className={styles.accordion}>
@@ -121,7 +111,7 @@ export default function ShowDetail() {
                   </button>
                   {expandPayment && (
                     <div className={styles.accordionBody}>
-                      <p>Visa, Mastercard, debito, transferencia bancaria y cuotas sin interes con bancos seleccionados.</p>
+                      <p>Visa y Mastercard, debito y credito. Cuotas sin interes con bancos seleccionados.</p>
                     </div>
                   )}
                 </div>
@@ -137,7 +127,7 @@ export default function ShowDetail() {
                   </button>
                   {expandParking && (
                     <div className={styles.accordionBody}>
-                      <p>Estacionamiento disponible en las inmediaciones del Movistar Arena. Av. Figueroa Alcorta 7597, Buenos Aires.</p>
+                      <p>Estacionamiento disponible en las inmediaciones del estadio.</p>
                     </div>
                   )}
                 </div>

@@ -1,25 +1,14 @@
-.card {
-  /* extends show-card from global */
-}
-
-.placeholder {
+.placeholderText {
   font-family: 'Bebas Neue', cursive;
-  font-size: 32px;
+  font-size: 30px;
   letter-spacing: 2px;
   text-align: center;
-  padding: 20px;
   line-height: 1.2;
-}
-
-.placeholderTitle {
-  font-family: 'Bebas Neue', cursive;
-  font-size: 32px;
-  letter-spacing: 2px;
 }
 
 .btnBuy {
   padding: 9px 22px;
-  border: 1.5px solid rgba(255,255,255,0.3);
+  border: 1.5px solid rgba(167,139,250,0.35);
   border-radius: 25px;
   background: transparent;
   color: white;
@@ -27,21 +16,11 @@
   font-weight: 800;
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s, color 0.2s;
+  font-family: 'Nunito', sans-serif;
 }
 
 .btnBuy:hover {
-  background: #a78bfa;
-  border-color: #a78bfa;
-  color: #0d0920;
-}
-
-.btnSold {
-  padding: 9px 22px;
-  border: 1.5px solid rgba(255,255,255,0.12);
-  border-radius: 25px;
-  background: transparent;
-  color: rgba(255,255,255,0.35);
-  font-size: 13px;
-  font-weight: 700;
-  cursor: not-allowed;
+  background: #7c3aed;
+  border-color: #7c3aed;
+  color: white;
 }
