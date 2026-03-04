@@ -17,7 +17,7 @@
   background:
     radial-gradient(ellipse 100% 100% at 50% 0%, rgba(100,150,255,0.3) 0%, transparent 70%),
     radial-gradient(ellipse 80% 80% at 80% 50%, rgba(180,60,255,0.2) 0%, transparent 60%),
-    linear-gradient(to bottom, #0d1e3d, #0a1628);
+    linear-gradient(to bottom, #0d1e3d, #080512);
 }
 
 .heroOverlay {
@@ -26,7 +26,7 @@
   left: 0;
   right: 0;
   height: 180px;
-  background: linear-gradient(to bottom, transparent, #0a1628);
+  background: linear-gradient(to bottom, transparent, #080512);
 }
 
 .heroTitle {
@@ -83,7 +83,7 @@
 }
 
 .filterSelect option {
-  background: #0f2545;
+  background: #120a2e;
   color: white;
 }
 

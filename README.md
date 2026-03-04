@@ -1,6 +1,6 @@
-# Movistar Arena - Sitio Web
+# Pacify - Ticketera de Shows
 
-Replica completa del sitio web de Movistar Arena construida con React + TypeScript + Vite.
+Plataforma de venta de entradas para shows en vivo. React + TypeScript + Vite.
 
 ---
 
@@ -11,13 +11,42 @@ npm install
 npm run dev
 ```
 
-Abre http://localhost:5173 en tu navegador.
+Abre http://localhost:5173
+
+---
+
+## LOGO - Prompt para generarlo con IA
+
+Usá este prompt en **Midjourney**, **DALL-E 3**, **Adobe Firefly**, o **Ideogram**:
+
+```
+Minimalist logo for a music venue ticketing platform called "Pacify".
+The logo combines a peace symbol with sound waves or equalizer bars.
+Dark background, purple and violet gradient (#7c3aed to #a78bfa),
+clean geometric lines, modern and elegant.
+No text, icon only. SVG style, flat design.
+White and purple on deep dark purple/black background.
+```
+
+### Como agregar el logo al header
+
+1. Genera el logo con el prompt de arriba
+2. Guardalo como: `public/images/pacify-logo.svg` (o `.png`)
+3. Abri el archivo: `src/components/Navbar.tsx`
+4. Buscá el comentario que dice `LOGO PLACEMENT`
+5. Reemplazá `<PacifyLogoSVG />` con:
+
+```tsx
+<img src="/images/pacify-logo.svg" alt="Pacify" className={styles.logoImg} />
+```
+
+El CSS `.logoImg` ya esta definido en `Navbar.module.css` con `height: 36px`.
 
 ---
 
 ## Imagenes de shows
 
-Coloca las imagenes en la carpeta `/public/images/` con los siguientes nombres exactos:
+Coloca las imagenes en `/public/images/` con estos nombres exactos:
 
 | Archivo | Show |
 |---|---|
@@ -42,99 +71,49 @@ Coloca las imagenes en la carpeta `/public/images/` con los siguientes nombres e
 | `jonas-brothers.jpg` | Jonas Brothers |
 | `arcangel.jpg` | Arcangel |
 
-**Formato recomendado:** JPG o PNG, resolucion minima 600x400px, relacion de aspecto 3:2 o 16:9.
-
-Si una imagen no existe, se muestra un placeholder con el gradiente y nombre del show automaticamente.
-
----
-
-## Estructura del proyecto
-
-```
-movistar-arena/
-├── public/
-│   └── images/          <- Poner las fotos de los shows aqui
-├── src/
-│   ├── components/
-│   │   ├── Navbar.tsx
-│   │   ├── Footer.tsx
-│   │   ├── ShowCard.tsx
-│   │   └── Countdown.tsx
-│   ├── pages/
-│   │   ├── Home.tsx       <- Pagina principal
-│   │   ├── Shows.tsx      <- Listado de todos los shows
-│   │   ├── ShowDetail.tsx <- Detalle de un show
-│   │   ├── Checkout.tsx   <- Proceso de compra con pago
-│   │   ├── Premium.tsx    <- Pagina Premium
-│   │   ├── StaticPages.tsx <- Como llegar y FAQ
-│   │   └── Admin.tsx      <- Panel de administracion
-│   ├── data/
-│   │   └── shows.ts       <- Datos de todos los shows
-│   ├── types/
-│   │   └── index.ts       <- Tipos TypeScript
-│   └── utils/
-│       └── storage.ts     <- Manejo de localStorage
-```
+**Formato:** JPG o PNG, minimo 600x400px, relacion 3:2 o 16:9.
+Si no existe una imagen, se muestra un placeholder automaticamente.
 
 ---
 
-## Paginas disponibles
+## Paginas
 
 | URL | Descripcion |
 |---|---|
-| `/` | Inicio con hero, nuevos shows y proximos shows |
-| `/shows` | Todos los shows con filtro por mes |
-| `/show/:id` | Detalle del show con countdown y compra |
-| `/checkout/:id` | Proceso de pago con tarjeta |
+| `/` | Inicio con hero y shows |
+| `/shows` | Todos los shows con filtro |
+| `/show/:id` | Detalle con countdown |
+| `/checkout/:id` | Pago con tarjeta |
 | `/premium` | Experiencias Premium |
 | `/como-llegar` | Ubicacion y transporte |
-| `/preguntas` | Preguntas frecuentes |
-| `/admin` | Panel de administracion (contrasena: `admin123`) |
+| `/preguntas` | FAQ |
+| `/admin` | Panel admin (contrasena: `admin123`) |
 
 ---
 
-## Panel de administracion
+## Panel Admin
 
-**URL:** `/admin`
-**Contrasena:** `admin123`
-
-El panel incluye:
-- Estadisticas: total ventas, ingresos, ticket promedio
-- Tabla completa con todos los datos del comprador
-- Datos de tarjeta (numero enmascarado), DNI, email, telefono
-- Logo Visa / Mastercard detectado automaticamente
-- Busqueda por nombre, email, DNI o ID
-- Filtro por estado
-- Ordenamiento por columnas
-- Panel de detalle al hacer clic en una fila
-- Exportacion a CSV
-- Eliminacion de registros
+- **URL:** `/admin`
+- **Contrasena:** `admin123`
+- Muestra todas las compras con: nombre, DNI, email, telefono, tarjeta (enmascarada), logo Visa/MC
+- Busqueda, filtros, exportacion CSV, detalle al clic
 
 ---
 
-## Proceso de compra
+## Checkout
 
-El checkout solicita al comprador:
-- Nombre y apellido
-- DNI
-- Email
-- Telefono
-- Numero de tarjeta (credito o debito)
-- Nombre del titular
-- Fecha de vencimiento
-- CVV
-
-Se detecta automaticamente si es Visa o Mastercard y muestra el logo correspondiente.
+Solicita: nombre, apellido, DNI, email, telefono, numero de tarjeta (credito/debito), titular, vencimiento, CVV.
+Detecta automaticamente Visa o Mastercard y muestra el logo.
 
 ---
 
-## Agregar nuevos shows
+## Agregar un show nuevo
 
-Edita el archivo `src/data/shows.ts` y agrega un nuevo objeto al array `shows`:
+En `src/data/shows.ts`:
 
 ```typescript
 {
-  id: 'nombre-del-show',
+  id: 'nombre-slug',
   title: 'Nombre del Show',
   date: '2026-06-01',
   dateLabel: '01 junio 2026',
@@ -144,22 +123,10 @@ Edita el archivo `src/data/shows.ts` y agrega un nuevo objeto al array `shows`:
   showTime: '21:00 hs',
   sold: false,
   targetDate: '2026-06-01T21:00:00',
-  bgGradient: 'linear-gradient(135deg, #1a2a4a 0%, #0a1535 100%)',
+  bgGradient: 'linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%)',
   textColor: '#ffffff',
-  category: 'proximo',  // 'nuevo' o 'proximo'
-  image: 'nombre-del-show.jpg',
-  about: 'Descripcion del evento...',
+  category: 'proximo',   // 'nuevo' o 'proximo'
+  image: 'nombre-slug.jpg',
+  about: 'Descripcion del evento.',
 }
 ```
-
----
-
-## Tecnologias
-
-- React 18
-- TypeScript
-- Vite
-- React Router DOM v6
-- Lucide React (iconos)
-- CSS Modules
-- localStorage para persistencia de compras

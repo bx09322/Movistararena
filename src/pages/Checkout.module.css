@@ -25,7 +25,7 @@
   padding: 0;
 }
 
-.backBtn:hover { color: #00aaff; }
+.backBtn:hover { color: #a78bfa; }
 
 /* Steps */
 .steps {
@@ -61,8 +61,8 @@
 }
 
 .stepActive .stepNum {
-  border-color: #00aaff;
-  color: #00aaff;
+  border-color: #a78bfa;
+  color: #a78bfa;
 }
 
 .stepLine {
@@ -82,8 +82,8 @@
 
 /* Card sections */
 .card {
-  background: #112035;
-  border: 1px solid #1e3a5f;
+  background: #110d28;
+  border: 1px solid #2a1d5e;
   border-radius: 16px;
   padding: 28px;
   margin-bottom: 20px;
@@ -109,7 +109,7 @@
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
-  background: #0f2545;
+  background: #120a2e;
   border-radius: 10px;
   padding: 6px;
 }
@@ -128,8 +128,8 @@
 }
 
 .cardTypeBtnActive {
-  background: #00aaff;
-  color: #001830;
+  background: #a78bfa;
+  color: white;
 }
 
 /* Card preview */
@@ -249,7 +249,7 @@
   padding: 15px;
   border-radius: 25px;
   border: none;
-  background: linear-gradient(135deg, #00aaff, #0077cc);
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
   color: white;
   font-size: 16px;
   font-weight: 800;
@@ -268,7 +268,7 @@
   padding: 15px;
   border-radius: 25px;
   border: none;
-  background: linear-gradient(135deg, #00aaff, #0077cc);
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
   color: white;
   font-size: 16px;
   font-weight: 800;
@@ -311,8 +311,8 @@
 }
 
 .summaryCard {
-  background: #112035;
-  border: 1px solid #1e3a5f;
+  background: #110d28;
+  border: 1px solid #2a1d5e;
   border-radius: 16px;
   overflow: hidden;
 }
@@ -359,7 +359,7 @@
 }
 
 .summarySection {
-  background: #0f2545;
+  background: #120a2e;
   padding: 16px 22px 20px;
   display: flex;
   flex-direction: column;
@@ -425,8 +425,8 @@
 }
 
 .successBox {
-  background: #112035;
-  border: 1px solid #1e3a5f;
+  background: #110d28;
+  border: 1px solid #2a1d5e;
   border-radius: 16px;
   padding: 24px 32px;
   width: 100%;

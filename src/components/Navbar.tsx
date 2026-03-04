@@ -3,6 +3,30 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import styles from './Navbar.module.css';
 
+// Built-in SVG logo — replace with your AI-generated logo image:
+// 1. Generate logo using the prompt in README.md
+// 2. Save as: public/images/pacify-logo.svg  (or .png)
+// 3. Replace <PacifyLogoSVG /> below with:
+//    <img src="/images/pacify-logo.svg" alt="Pacify" className={styles.logoImg} />
+function PacifyLogoSVG() {
+  return (
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.logoSvg}>
+      <circle cx="18" cy="18" r="16" stroke="url(#pg)" strokeWidth="2"/>
+      <line x1="18" y1="4" x2="18" y2="32" stroke="url(#pg)" strokeWidth="1.8" strokeLinecap="round"/>
+      <line x1="18" y1="18" x2="8" y2="28" stroke="url(#pg)" strokeWidth="1.8" strokeLinecap="round"/>
+      <line x1="18" y1="18" x2="28" y2="28" stroke="url(#pg)" strokeWidth="1.8" strokeLinecap="round"/>
+      <path d="M10 12 Q18 8 26 12" stroke="#a78bfa" strokeWidth="1.4" strokeLinecap="round" fill="none" opacity="0.7"/>
+      <path d="M7 16 Q18 10 29 16" stroke="#7c3aed" strokeWidth="1" strokeLinecap="round" fill="none" opacity="0.4"/>
+      <defs>
+        <linearGradient id="pg" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#a78bfa"/>
+          <stop offset="100%" stopColor="#7c3aed"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
+
 export default function Navbar() {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -17,21 +41,11 @@ export default function Navbar() {
   return (
     <nav className={styles.nav}>
       <div className={styles.inner}>
-        {/* Logo */}
         <Link to="/" className={styles.logo}>
-          <div className={styles.logoIcon}>
-            <div className={styles.logoBar} />
-            <div className={styles.logoM}>
-              <svg width="18" height="14" viewBox="0 0 18 14" fill="none">
-                <path d="M1 13V1L6 8L9 3L12 8L17 1V13" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <div className={styles.logoBar} />
-          </div>
-          <span className={styles.logoText}>Movistar Arena</span>
+          <PacifyLogoSVG />
+          <span className={styles.logoText}>Pacify</span>
         </Link>
 
-        {/* Links */}
         <ul className={styles.links}>
           <li>
             <Link to="/" className={`${styles.iconLink} ${location.pathname === '/' ? styles.active : ''}`}>
@@ -53,19 +67,16 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* Buttons */}
         <div className={styles.buttons}>
           <button className={styles.btnLogin}>Iniciar sesion</button>
           <button className={styles.btnRegister}>Crear cuenta</button>
         </div>
 
-        {/* Mobile toggle */}
         <button className={styles.menuToggle} onClick={() => setMobileOpen(!mobileOpen)}>
           {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
 
-      {/* Mobile menu */}
       {mobileOpen && (
         <div className={styles.mobileMenu}>
           <Link to="/" className={styles.mobileLink} onClick={() => setMobileOpen(false)}>Inicio</Link>

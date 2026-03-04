@@ -33,7 +33,7 @@
 }
 
 .backBtn:hover {
-  color: #00aaff;
+  color: #a78bfa;
 }
 
 .content {
@@ -98,7 +98,7 @@
   font-size: 24px;
   font-weight: 900;
   font-style: italic;
-  color: #00aaff;
+  color: #a78bfa;
   margin-bottom: 14px;
 }
 
@@ -110,8 +110,8 @@
 
 /* Ticket box */
 .ticketBox {
-  background: #112035;
-  border: 1px solid #1e3a5f;
+  background: #110d28;
+  border: 1px solid #2a1d5e;
   border-radius: 16px;
   overflow: hidden;
   position: sticky;
@@ -119,7 +119,7 @@
 }
 
 .ticketHeader {
-  background: #00aaff;
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
   padding: 20px 24px;
   display: flex;
   align-items: center;
@@ -129,13 +129,13 @@
 .ticketFromLabel {
   font-size: 14px;
   font-weight: 800;
-  color: #001830;
+  color: white;
 }
 
 .ticketPrice {
   font-family: 'Bebas Neue', cursive;
   font-size: 38px;
-  color: #001830;
+  color: white;
   letter-spacing: 1px;
 }
 
@@ -148,13 +148,13 @@
   align-items: center;
   gap: 14px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #1e3a5f;
+  border-bottom: 1px solid #2a1d5e;
   margin-bottom: 16px;
   flex-wrap: wrap;
 }
 
 .dateBadge {
-  background: #0f2545;
+  background: #120a2e;
   border-radius: 10px;
   padding: 10px 14px;
   text-align: center;
@@ -165,7 +165,7 @@
   display: block;
   font-family: 'Bebas Neue', cursive;
   font-size: 30px;
-  color: #00aaff;
+  color: #a78bfa;
   line-height: 1;
 }
 
@@ -192,7 +192,7 @@
 
 .timeLabel {
   font-size: 11px;
-  color: #00aaff;
+  color: #a78bfa;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.4px;
@@ -235,9 +235,9 @@
 }
 
 .btnBuySmall:hover {
-  background: #00aaff;
-  border-color: #00aaff;
-  color: #001830;
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  border-color: #a78bfa;
+  color: white;
 }
 
 .btnBuyBig {
@@ -245,7 +245,7 @@
   padding: 14px;
   border-radius: 25px;
   border: none;
-  background: linear-gradient(135deg, #00aaff, #0077cc);
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
   color: white;
   font-size: 15px;
   font-weight: 800;
@@ -262,7 +262,7 @@
 
 /* Accordion */
 .accordion {
-  border-top: 1px solid #1e3a5f;
+  border-top: 1px solid #2a1d5e;
   padding: 14px 0 0;
   margin-top: 12px;
 }
@@ -283,7 +283,7 @@
 }
 
 .accordionHeader:hover {
-  color: #00aaff;
+  color: #a78bfa;
 }
 
 .accordionTitle {

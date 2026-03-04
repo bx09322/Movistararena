@@ -6,16 +6,22 @@ export default function Footer() {
       <div className={styles.inner}>
         <div className={styles.brand}>
           <div className={styles.logo}>
-            <div className={styles.logoBar} />
-            <div className={styles.logoM}>
-              <svg width="18" height="14" viewBox="0 0 18 14" fill="none">
-                <path d="M1 13V1L6 8L9 3L12 8L17 1V13" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <div className={styles.logoBar} />
-            <span className={styles.logoText}>Movistar Arena</span>
+            <svg width="28" height="28" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="18" cy="18" r="16" stroke="url(#fg)" strokeWidth="2"/>
+              <line x1="18" y1="4" x2="18" y2="32" stroke="url(#fg)" strokeWidth="1.8" strokeLinecap="round"/>
+              <line x1="18" y1="18" x2="8" y2="28" stroke="url(#fg)" strokeWidth="1.8" strokeLinecap="round"/>
+              <line x1="18" y1="18" x2="28" y2="28" stroke="url(#fg)" strokeWidth="1.8" strokeLinecap="round"/>
+              <path d="M10 12 Q18 8 26 12" stroke="#a78bfa" strokeWidth="1.4" strokeLinecap="round" fill="none" opacity="0.7"/>
+              <defs>
+                <linearGradient id="fg" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#a78bfa"/>
+                  <stop offset="100%" stopColor="#7c3aed"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <span className={styles.logoText}>Pacify</span>
           </div>
-          <p className={styles.address}>Av. Figueroa Alcorta 7597, Buenos Aires</p>
+          <p className={styles.address}>Buenos Aires, Argentina</p>
         </div>
 
         <div className={styles.links}>
@@ -43,8 +49,8 @@ export default function Footer() {
       </div>
 
       <div className={styles.bottom}>
-        <span>2026 Movistar Arena. Todos los derechos reservados.</span>
-        <a href="/admin" style={{ color: 'rgba(255,255,255,0.2)', fontSize: '11px' }}>Admin</a>
+        <span>2026 Pacify. Todos los derechos reservados.</span>
+        <a href="/admin" style={{ color: 'rgba(255,255,255,0.15)', fontSize: '11px' }}>Admin</a>
       </div>
     </footer>
   );

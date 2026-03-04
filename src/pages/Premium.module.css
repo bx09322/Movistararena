@@ -17,7 +17,7 @@
   background:
     radial-gradient(ellipse 100% 80% at 50% 50%, rgba(0,150,255,0.25) 0%, transparent 70%),
     radial-gradient(ellipse 80% 60% at 80% 30%, rgba(180,60,255,0.2) 0%, transparent 60%),
-    linear-gradient(to bottom, #0a1e40, #0a1628);
+    linear-gradient(to bottom, #0a1e40, #080512);
 }
 
 .heroOverlay {
@@ -26,7 +26,7 @@
   left: 0;
   right: 0;
   height: 160px;
-  background: linear-gradient(to bottom, transparent, #0a1628);
+  background: linear-gradient(to bottom, transparent, #080512);
 }
 
 .heroTitle {
@@ -63,8 +63,8 @@
 }
 
 .card {
-  background: #112035;
-  border: 1px solid #1e3a5f;
+  background: #110d28;
+  border: 1px solid #2a1d5e;
   border-radius: 16px;
   overflow: hidden;
   transition: transform 0.25s, box-shadow 0.25s;
@@ -72,7 +72,7 @@
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 16px 40px rgba(0,170,255,0.12);
+  box-shadow: 0 16px 40px rgba(167,139,250,0.12);
 }
 
 .cardLogo {
@@ -127,7 +127,7 @@
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  background: #0f2545;
+  background: #120a2e;
   border-radius: 12px;
   padding: 18px;
 }
@@ -136,8 +136,8 @@
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: rgba(0,170,255,0.12);
-  color: #00aaff;
+  background: rgba(167,139,250,0.12);
+  color: #a78bfa;
   display: flex;
   align-items: center;
   justify-content: center;
