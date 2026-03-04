@@ -1,0 +1,56 @@
+.root {
+  background: linear-gradient(135deg, #e85d04, #f48c06);
+  border-radius: 12px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 800;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.units {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.unitGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.val {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 36px;
+  line-height: 1;
+  min-width: 44px;
+  text-align: center;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.85;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: -2px;
+}
+
+.sep {
+  font-size: 22px;
+  font-weight: 900;
+  opacity: 0.5;
+  margin-bottom: 4px;
+}

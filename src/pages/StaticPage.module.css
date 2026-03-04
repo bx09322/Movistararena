@@ -1,0 +1,150 @@
+.page {
+  padding-top: 64px;
+}
+
+.hero {
+  position: relative;
+  height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 100% 80% at 50% 50%, rgba(0,100,200,0.25) 0%, transparent 70%),
+    linear-gradient(to bottom, #0d1e3d, #0a1628);
+}
+
+.heroOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  background: linear-gradient(to bottom, transparent, #0a1628);
+}
+
+.heroTitle {
+  position: relative;
+  z-index: 2;
+  font-family: 'Nunito', sans-serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 72px;
+  color: white;
+  text-align: center;
+  text-shadow: 0 4px 30px rgba(0,0,0,0.4);
+  line-height: 1.1;
+}
+
+.content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 40px 80px;
+}
+
+/* ComoLlegar */
+.address {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.address h2 {
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.address p {
+  color: #8ba0b8;
+  font-size: 16px;
+}
+
+.transportGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-bottom: 36px;
+}
+
+.transportCard {
+  background: #112035;
+  border: 1px solid #1e3a5f;
+  border-radius: 14px;
+  padding: 22px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  transition: transform 0.2s;
+}
+
+.transportCard:hover { transform: translateY(-3px); }
+
+.transportIcon {
+  font-size: 28px;
+}
+
+.transportCard h3 {
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.transportCard p {
+  font-size: 13px;
+  color: #8ba0b8;
+  line-height: 1.6;
+}
+
+.mapPlaceholder {
+  background: #112035;
+  border: 1px solid #1e3a5f;
+  border-radius: 14px;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.3);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* FAQ */
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.faqItem {
+  background: #112035;
+  border: 1px solid #1e3a5f;
+  border-radius: 12px;
+  padding: 22px 24px;
+  transition: border-color 0.2s;
+}
+
+.faqItem:hover { border-color: rgba(0,170,255,0.3); }
+
+.faqItem h3 {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.faqItem p {
+  font-size: 14px;
+  color: #8ba0b8;
+  line-height: 1.7;
+}
+
+@media (max-width: 640px) {
+  .transportGrid { grid-template-columns: 1fr; }
+  .content { padding: 32px 20px 60px; }
+  .heroTitle { font-size: 52px; }
+}

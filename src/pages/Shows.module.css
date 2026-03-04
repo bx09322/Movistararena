@@ -1,0 +1,113 @@
+.page {
+  padding-top: 64px;
+}
+
+.hero {
+  position: relative;
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 100% 100% at 50% 0%, rgba(100,150,255,0.3) 0%, transparent 70%),
+    radial-gradient(ellipse 80% 80% at 80% 50%, rgba(180,60,255,0.2) 0%, transparent 60%),
+    linear-gradient(to bottom, #0d1e3d, #0a1628);
+}
+
+.heroOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 180px;
+  background: linear-gradient(to bottom, transparent, #0a1628);
+}
+
+.heroTitle {
+  position: relative;
+  z-index: 2;
+  font-family: 'Nunito', sans-serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 90px;
+  color: white;
+  text-shadow: 0 4px 30px rgba(0,0,0,0.4);
+}
+
+.main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 40px 80px;
+  position: relative;
+}
+
+.filterRow {
+  position: relative;
+  margin-bottom: 36px;
+}
+
+.filterGroup {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  padding: 10px 16px;
+  min-width: 200px;
+}
+
+.filterLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filterSelect {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.filterSelect option {
+  background: #0f2545;
+  color: white;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.empty {
+  text-align: center;
+  padding: 60px 0;
+  color: rgba(255,255,255,0.4);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .heroTitle { font-size: 68px; }
+}
+
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; }
+  .main { padding: 28px 20px 60px; }
+  .heroTitle { font-size: 52px; }
+}

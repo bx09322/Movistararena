@@ -1,0 +1,197 @@
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(10, 22, 40, 0.97);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 40px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.logoIcon {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.logoBar {
+  width: 3px;
+  height: 24px;
+  background: #00aaff;
+  border-radius: 2px;
+}
+
+.logoM {
+  width: 30px;
+  height: 24px;
+  background: #8b2fc9;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoText {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+  color: white;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+  margin-left: auto;
+}
+
+.link {
+  padding: 6px 12px;
+  color: rgba(255,255,255,0.8);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.link:hover {
+  color: white;
+  background: rgba(255,255,255,0.06);
+}
+
+.link.active {
+  color: #00aaff;
+}
+
+.iconLink {
+  padding: 6px 10px;
+  color: rgba(255,255,255,0.7);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: color 0.2s;
+}
+
+.iconLink:hover,
+.iconLink.active {
+  color: white;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.btnLogin {
+  padding: 8px 18px;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 25px;
+  background: transparent;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+
+.btnLogin:hover {
+  border-color: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.06);
+}
+
+.btnRegister {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #8b2fc9, #d63af9);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+
+.btnRegister:hover {
+  opacity: 0.85;
+}
+
+.menuToggle {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+}
+
+.mobileMenu {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px 20px;
+  gap: 4px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  background: rgba(10, 22, 40, 0.98);
+}
+
+.mobileLink {
+  padding: 12px 16px;
+  color: rgba(255,255,255,0.85);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.mobileLink:hover {
+  background: rgba(255,255,255,0.07);
+  color: white;
+}
+
+.mobileBtns {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 0 16px;
+}
+
+@media (max-width: 900px) {
+  .links, .buttons {
+    display: none;
+  }
+
+  .menuToggle {
+    display: flex;
+  }
+
+  .inner {
+    padding: 0 20px;
+  }
+}

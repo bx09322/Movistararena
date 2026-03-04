@@ -1,0 +1,99 @@
+.footer {
+  background: #060f1e;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 48px 40px 0;
+}
+
+.inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+}
+
+.brand {}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-bottom: 12px;
+}
+
+.logoBar {
+  width: 3px;
+  height: 22px;
+  background: #00aaff;
+  border-radius: 2px;
+}
+
+.logoM {
+  width: 28px;
+  height: 22px;
+  background: #8b2fc9;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoText {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 18px;
+  color: white;
+  margin-left: 6px;
+}
+
+.address {
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.5;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.links h4 {
+  font-size: 11px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.links a {
+  color: rgba(255,255,255,0.6);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.links a:hover { color: white; }
+
+.bottom {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 18px 0;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+}
+
+@media (max-width: 900px) {
+  .inner { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 640px) {
+  .inner { grid-template-columns: 1fr; gap: 24px; }
+  .footer { padding: 36px 20px 0; }
+}

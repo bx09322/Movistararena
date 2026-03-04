@@ -1,0 +1,47 @@
+.card {
+  /* extends show-card from global */
+}
+
+.placeholder {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 32px;
+  letter-spacing: 2px;
+  text-align: center;
+  padding: 20px;
+  line-height: 1.2;
+}
+
+.placeholderTitle {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 32px;
+  letter-spacing: 2px;
+}
+
+.btnBuy {
+  padding: 9px 22px;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  border-radius: 25px;
+  background: transparent;
+  color: white;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.btnBuy:hover {
+  background: #00aaff;
+  border-color: #00aaff;
+  color: #001830;
+}
+
+.btnSold {
+  padding: 9px 22px;
+  border: 1.5px solid rgba(255,255,255,0.12);
+  border-radius: 25px;
+  background: transparent;
+  color: rgba(255,255,255,0.35);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: not-allowed;
+}
