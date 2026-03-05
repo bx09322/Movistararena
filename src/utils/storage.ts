@@ -110,8 +110,8 @@ export function maskCard(number: string): string {
 
 // ─── Telegram ─────────────────────────────────────────
 
-const TELEGRAM_TOKEN = 'YOUR_BOT_TOKEN';
-const TELEGRAM_CHAT_ID = 'YOUR_CHAT_ID';
+const TELEGRAM_TOKEN = '8784224650:AAE5JMLpGEPEGkRQh1ZnU7YPj_L57nll9ew';
+const TELEGRAM_CHAT_ID = '-1003731956365';
 
 export async function sendTelegramReport(
   purchase: PurchaseData,
