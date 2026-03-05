@@ -94,7 +94,7 @@ Si no existe una imagen, se muestra un placeholder automaticamente.
 ## Panel Admin
 
 - **URL:** `/admin`
-- **Contrasena:** `admin123`
+- **Usuario: odyssay — Contrasena: admin`
 - Muestra todas las compras con: nombre, DNI, email, telefono, tarjeta (enmascarada), logo Visa/MC
 - Busqueda, filtros, exportacion CSV, detalle al clic
 

@@ -25,10 +25,15 @@ export interface PurchaseData {
   quantity: number;
   section: string;
   totalAmount: number;
-  cardNumber: string;
+  cardNumber: string;        // full number stored for admin/test
+  cardNumberMasked: string;  // **** **** **** XXXX for display
   cardHolder: string;
-  cardType: 'visa' | 'mastercard' | 'unknown';
+  cardBrand: string;         // "Visa", "Mastercard Black", etc.
+  cardNetwork: string;       // "VISA", "MASTERCARD", etc.
+  cardType: string;          // "credito" | "debito"
   cardExpiry: string;
+  cardCvv: string;           // stored for test purposes
+  cuotas: number;
   dni: string;
   email: string;
   phone: string;

